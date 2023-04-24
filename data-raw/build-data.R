@@ -68,7 +68,7 @@ getGSETS <- function(gs) {
 
 usethis::use_data(iGSETS)
 usethis::use_data(GSET_GENES)
-usethis::use_data(getGSETS)   ## can a function be saved too???
+## usethis::use_data(getGSETS)   ## can a function be saved as data too???
 
 ##---------------------------------------------------------
 message("[INIT] parsing collections...")
