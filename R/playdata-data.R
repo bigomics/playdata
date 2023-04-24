@@ -38,7 +38,6 @@
 #' @source Geiger2016
 "GEIGER_PGX"
 
-
 #' Some kind of sparse matrix dataset?
 #'
 #' No idea what this data is but it is used in `test_genesets`.
@@ -112,6 +111,30 @@
 #' @format ## `RNA_TISSUE_MATRIX`
 #' @source unknown
 "RNA_TISSUE_MATRIX"
+
+#' A dataset used by `compute_deconvolution`
+#'
+#' No idea what this data is but it is used in `compute_deconvolution`.
+#'
+#' @format ## `GSETS`
+#' @source unknown
+"GSETS"
+
+#' A dataset used by `compute_deconvolution`
+#'
+#' No idea what this data is but it is used in `compute_deconvolution`.
+#'
+#' @format ## `iGSETS`
+#' @source unknown
+"iGSETS"
+
+#' A dataset used by `compute_deconvolution`
+#'
+#' No idea what this data is but it is used in `compute_deconvolution`.
+#'
+#' @format ## `GSET_GENES`
+#' @source unknown
+"GSET_GENES"
 
 #' Get path to omp example dataset(s)
 #'
