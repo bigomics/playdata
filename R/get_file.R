@@ -9,7 +9,7 @@
 #'   be listed.
 
 #' @examples
-#' get_fiel()
+#' get_file()
 #' get_file("kinase_substrates_kea.gmt")
 #' @export
 get_file <- function(file = NULL) {

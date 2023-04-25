@@ -187,9 +187,9 @@
 #'
 #' No idea what this data is
 #'
-#' @format ## `L1000_REPRURPOSING_DRUGS`
+#' @format ## `L1000_REPURPOSING_DRUGS`
 #' @source unknown
-"L1000_REPRURPOSING_DRUGS"
+"L1000_REPURPOSING_DRUGS"
 
 #' A dataset used by `compute_deconvolution`
 #'

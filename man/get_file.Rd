@@ -16,6 +16,6 @@ directory. This function make them easy to access. This function was
 taken from tidyverse/readr.
 }
 \examples{
-get_fiel()
+get_file()
 get_file("kinase_substrates_kea.gmt")
 }
