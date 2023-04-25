@@ -215,6 +215,14 @@
 #' @source unknown
 "RNA_TISSUE_MATRIX"
 
+#' A dataset used by
+#'
+#' No idea what this data is but it is used .
+#'
+#' @format ## `RTCGA_SURVIVAL`
+#' @source unknown
+"RTCGA_SURVIVAL"
+
 
 #' A dataset used by `compute_deconvolution`
 #'
