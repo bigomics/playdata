@@ -7,7 +7,6 @@
 #'
 #' @param file string. Name of file. If `NULL`, the example files will
 #'   be listed.
-
 #' @examples
 #' get_file()
 #' get_file("kinase_substrates_kea.gmt")
@@ -18,4 +17,20 @@ get_file <- function(file = NULL) {
     } else {
         system.file("extdata", file, package = "playdata", mustWork = TRUE)
     }
+}
+
+
+#' Get a playdata dataset dynamically from a variable name
+#'
+#' This function allows users to access playdata datasets when the dataset to
+#' be accessed is only known dynamically or through a variable name
+#'
+#' @param name string. Name of dataset.
+#' @examples
+#' all.equal(get_dataset('BLUERED'), playdata::BLUERED)
+#' @export
+get_data <- function(name) {
+    return(
+        eval(rlang::parse_expr(glue::glue("playdata::{name}")))
+    )
 }
