@@ -1,3 +1,11 @@
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `BLUERED`
+#' @source unknown
+"BLUERED"
+
 #' A dataset used by `compute_deconvolution`
 #'
 #' No idea what this data is but it is used in `compute_deconvolution`.
@@ -14,6 +22,22 @@
 #' @source unknown
 "CCLE_RNA_CELLINE"
 
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `COLLECTIONS`
+#' @source unknown
+"COLLECTIONS"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `COLORS`
+#' @source unknown
+"COLORS"
+
 #' A dataset used by `compute_deconvolution`
 #'
 #' No idea what this data is but it is used in `compute_deconvolution`.
@@ -21,6 +45,14 @@
 #' @format ## `DICE_SIGNATURE1000`
 #' @source unknown
 "DICE_SIGNATURE1000"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `FAMILIES`
+#' @source unknown
+"FAMILIES"
 
 #' Example pgx object
 #'
@@ -38,6 +70,46 @@
 #' @source Geiger2016
 "GEIGER_PGX"
 
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GENE_SUMMARY`
+#' @source unknown
+"GENE_SUMMARY"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GENE_SYMBOL`
+#' @source unknown
+"GENE_SYMBOL"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GENE_TITLE`
+#' @source unknown
+"GENE_TITLE"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GSET_GENES`
+#' @source unknown
+"GSET_GENES"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GSET_PREFIX_REGEX`
+#' @source unknown
+"GSET_PREFIX_REGEX"
+
 #' Some kind of sparse matrix dataset?
 #'
 #' No idea what this data is but it is used in `test_genesets`.
@@ -46,6 +118,22 @@
 #' A dgCMatrix / Matrix object
 #' @source unknown
 "GSET_SPARSEG_XL"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GSETS`
+#' @source unknown
+"GSETS"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `GSETxGENE`
+#' @source unknown
+"GSETxGENE"
 
 #' A dataset used by `compute_deconvolution`
 #'
@@ -63,6 +151,14 @@
 #' @source unknown
 "HPA_RNA_CELLINE"
 
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `iGSETS`
+#' @source unknown
+"iGSETS"
+
 #' A dataset used by `compute_deconvolution`
 #'
 #' No idea what this data is but it is used in `compute_deconvolution`.
@@ -78,7 +174,6 @@
 #' @format ## `IMMUNOSTATES_MATRIX`
 #' @source unknown
 "IMMUNOSTATES_MATRIX"
-
 
 #' A dataset used
 #'
@@ -104,6 +199,14 @@
 #' @source unknown
 "LM22"
 
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `PURPLEYELLOW`
+#' @source unknown
+"PURPLEYELLOW"
+
 #' A dataset used by `compute_deconvolution`
 #'
 #' No idea what this data is but it is used in `compute_deconvolution`.
@@ -112,47 +215,10 @@
 #' @source unknown
 "RNA_TISSUE_MATRIX"
 
-#' A dataset used by `compute_deconvolution`
+#' A dataset used by
 #'
-#' No idea what this data is but it is used in `compute_deconvolution`.
+#' No idea what this data is but it is used.
 #'
-#' @format ## `GSETS`
+#' @format ## `TISSUE`
 #' @source unknown
-"GSETS"
-
-#' A dataset used by `compute_deconvolution`
-#'
-#' No idea what this data is but it is used in `compute_deconvolution`.
-#'
-#' @format ## `iGSETS`
-#' @source unknown
-"iGSETS"
-
-#' A dataset used by `compute_deconvolution`
-#'
-#' No idea what this data is but it is used in `compute_deconvolution`.
-#'
-#' @format ## `GSET_GENES`
-#' @source unknown
-"GSET_GENES"
-
-#' Get path to omp example dataset(s)
-#'
-#' `playdata` comes bundled with a number of sample files in its `inst/extdata`
-#' directory. This function make them easy to access. This function was
-#' taken from tidyverse/readr.
-#'
-#' @param file string. Name of file. If `NULL`, the example files will
-#'   be listed.
-
-#' @examples
-#' example_file()
-#' example_file("counts.csv")
-#' @export
-example_file <- function(file = NULL) {
-    if (is.null(file)) {
-        dir(system.file("extdata", package = "playdata"))
-    } else {
-        system.file("extdata", file, package = "playdata", mustWork = TRUE)
-    }
-}
+"TISSUE"
