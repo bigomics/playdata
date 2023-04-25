@@ -215,6 +215,15 @@
 #' @source unknown
 "RNA_TISSUE_MATRIX"
 
+
+#' A dataset used by `compute_deconvolution`
+#'
+#' No idea what this data is but it is used in `compute_deconvolution`.
+#'
+#' @format ## `SIGNATURE_IMMUNEMETA`
+#' @source unknown
+"SIGNATURE_IMMUNEMETA"
+
 #' A dataset used by
 #'
 #' No idea what this data is but it is used.
