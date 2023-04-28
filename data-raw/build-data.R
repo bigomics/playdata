@@ -62,9 +62,11 @@ message("[INIT] converting GSETS to list of integers...")
 GSET_GENES <- sort(unique(unlist(GSETS)))  ## slow...
 iGSETS <- parallel::mclapply(GSETS, function(a) match(a,GSET_GENES))  ## very slow!!!
 names(iGSETS) <- names(GSETS)
-getGSETS <- function(gs) {
-  lapply(iGSETS[gs],function(i) GSET_GENES[i])
-}
+## getGSETS <- function(gs) {lapply(iGSETS[gs],function(i) GSET_GENES[i]) }
+
+## compare size savings!
+object.size(GSETS) / 1e6
+object.size(iGSETS) / 1e6
 
 usethis::use_data(iGSETS)
 usethis::use_data(GSET_GENES)
