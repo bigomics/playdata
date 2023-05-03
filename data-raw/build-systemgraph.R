@@ -22,10 +22,10 @@ dir("~")
 ## From geneset GMT file, create large sparse 0/1 matrix.
 ##----------------------------------------------------------------------
 
-load(file="../lib/gmt-all.rda",verbose=1)
+load(file="data-raw/extdata/gmt-all.rda",verbose=1)
 G <- build.createSparseGenesetMatrix(gmt.all)
 dim(G)
-save(G, file="gset-sparseG-XL2.rda")
+save(G, file="data-raw/extdata/gset-sparseG-XL.rda")
 
 load(file="gset-sparseG-XL2.rda", verbose=1)
 dim(G)
@@ -237,7 +237,7 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     genes <- names(which( genes.table >= 10 ))
     genes <- genes[grep("^LOC|RIK$",genes,invert=TRUE)]
     genes <- intersect(genes, known.symbols)
-    annot <- ngs.getGeneAnnotation(genes)
+    annot <- playbase::ngs.getGeneAnnotation(genes)
     genes <- genes[ !is.na(annot$chr) ]
     length(genes)
 
@@ -257,7 +257,7 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     jj <- unlist(idx.j)
     length(ii)
     length(jj)
-    G <- sparseMatrix( i=ii, j=jj, x=rep(1,length(ii)),
+    G <- Matrix::sparseMatrix( i=ii, j=jj, x=rep(1,length(ii)),
                       dims = c(length(gmt.all), length(genes)) )
     dim(G)
     
