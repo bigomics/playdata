@@ -14,6 +14,10 @@
 .RData
 .RDataTmp
 
+# data files
+*.gmt
+*.txt
+
 # User-specific files
 .Ruserdata
 
