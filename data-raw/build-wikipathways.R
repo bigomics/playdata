@@ -1,3 +1,8 @@
+##
+## This file is part of the Omics Playground project.
+## Copyright (c) 2018-2023 BigOmics Analytics SA. All rights reserved.
+##
+
 if(!"rWikiPathways" %in% installed.packages()){
     if (!requireNamespace("BiocManager", quietly = TRUE))
         install.packages("BiocManager")
@@ -22,5 +27,5 @@ gene_symbols = getBM(attributes = c("entrezgene_id", "hgnc_symbol"),
                      mart = ensembl)
 gmt$gene <- gene_symbols[match(gmt[,2], gene_symbols[,1]),2]
 
-writeGMT(gmt, "data-raw/extdata/pahtways_wikipathways_hsa.gmt")
+writeGMT(gmt, "data-raw/extdata/gmt/pahtways_wikipathways_hsa.gmt")
 
