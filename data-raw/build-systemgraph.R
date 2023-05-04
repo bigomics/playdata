@@ -262,4 +262,3 @@ load(file="data-raw/extdata/gmt-all.rda",verbose=1)
 
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
-
