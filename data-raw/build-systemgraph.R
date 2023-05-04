@@ -8,29 +8,16 @@
 ##install.packages("biganalytics")
 ##install.packages("bigpca")
 
-source("../R/gx-util.r")
+# source("../R/gx-util.r")
 
 library(Rtsne)
 library(qlcMatrix)
 library(irlba)
+require(parallel)
 library(sparsesvd)
 
 require(org.Hs.eg.db)
-dir("~")
-
-##----------------------------------------------------------------------
-## From geneset GMT file, create large sparse 0/1 matrix.
-##----------------------------------------------------------------------
-
-load(file="data-raw/extdata/gmt-all.rda",verbose=1)
-G <- build.createSparseGenesetMatrix(gmt.all)
-dim(G)
-save(G, file="data-raw/extdata/gset-sparseG-XL.rda")
-
-load(file="gset-sparseG-XL2.rda", verbose=1)
-dim(G)
-max(G)
-
+# dir("~")
 
 build.computeGeneGenesetTSNE <- function(X, G) {
     ##
@@ -249,7 +236,6 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     length(gmt.all)
 
     ## build huge sparsematrix gene x genesets
-    require(parallel)
     genes <- sort(genes)
     idx.j <- mclapply(gmt.all[], function(s) match(s,genes))
     idx.i <- lapply(1:length(gmt.all), function(i) rep(i,length(idx.j[[i]])))
@@ -266,3 +252,14 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
 
     return(G)
 }
+
+
+##----------------------------------------------------------------------
+## From geneset GMT file, create large sparse 0/1 matrix.
+##----------------------------------------------------------------------
+
+load(file="data-raw/extdata/gmt-all.rda",verbose=1)
+
+GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
+usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
+
