@@ -29,5 +29,5 @@ gene_symbols = getBM(attributes = c("entrezgene_id", "hgnc_symbol"),
                      mart = ensembl)
 gmt$gene <- gene_symbols[match(gmt[,2], gene_symbols[,1]),2]
 
-writeGMT(gmt, "data-raw/extdata/gmt/Pahtways_wikipathways_hsa.gmt")
+writeGMT(gmt, "data-raw/extdata/gmt/Pathway_wikipathways_hsa.gmt")
 
