@@ -41,7 +41,7 @@ gmt.db = toupper(gmt.db)
 table(gmt.db)
 for(i in 1:length(gmt.all)) {
     names(gmt.all[[i]]) <- sub("\\(GO:","(GO_",names(gmt.all[[i]]))
-    names(gmt.all[[i]]) <- sub("%","_",names(gmt.all[[i]])) # substitute % sign in wikipathways
+    names(gmt.all[[i]]) <- gsub("%","_",names(gmt.all[[i]])) # substitute % sign in wikipathways
     names(gmt.all[[i]]) <- sub(":","",names(gmt.all[[i]]))
     ## names(gmt.all[[i]]) <- tolower(names(gmt.all[[i]]))
     names(gmt.all[[i]]) <- paste0(toupper(gmt.db[i]),":",names(gmt.all[[i]]))
