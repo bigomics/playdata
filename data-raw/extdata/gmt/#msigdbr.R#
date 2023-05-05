@@ -1,0 +1,7 @@
+
+## MSigDB
+
+library("msigdbr")
+
+m_df = msigdbr(species = "Homo sapiens", category="H")
+m_list = m_df %>% split(x = .$gene_symbol, f = .$gs_name)
