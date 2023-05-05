@@ -74,12 +74,11 @@ saveRDS(gmt.all, file="data-raw/extdata/gmt-all.rds")
 
 ## NEED RETHINK!!!! this should be improved using BioMart...
 cat("Converting gsets to mouse ID...\n")
-library(org.Mm.eg.db)
-mouse.genes = as.character(unlist(as.list(org.Mm.egSYMBOL)))
+mouse.genes = as.character(unlist(as.list(org.Mm.eg.db::org.Mm.egSYMBOL)))
 names(mouse.genes) = toupper(mouse.genes)
-gmt.all <- mclapply(gmt.all[], function(s) setdiff(as.character(mouse.genes[s]),NA), mc.cores=4)
-save(gmt.all, file="../files/gmt-all-mouse.rda")
-saveRDS(gmt.all, file="../files/gmt-all-mouse.rds")
+gmt.all <- mclapply(gmt.all[], function(s) setdiff(as.character(mouse.genes[s]),NA), mc.cores=1)
+save(gmt.all, file="data-raw/extdata/gmt-all-mouse.rda")
+saveRDS(gmt.all, file="data-raw/extdata/gmt-all-mouse.rds")
 remove(gmt.all)
 
 
