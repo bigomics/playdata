@@ -98,6 +98,14 @@
 #'
 #' No idea what this data is but it is used.
 #'
+#' @format ## `getGSETS`
+#' @source unknown
+"getGSETS"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
 #' @format ## `GSET_GENES`
 #' @source unknown
 "GSET_GENES"
