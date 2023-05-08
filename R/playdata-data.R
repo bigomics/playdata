@@ -167,13 +167,21 @@
 #' @source unknown
 "iGSETS"
 
-#' A dataset used by `compute_deconvolution`
+#' A dataset used by
 #'
-#' No idea what this data is but it is used in `compute_deconvolution`.
+#' No idea what this data is but it is used
 #'
 #' @format ## `IMMPROT_SIGNATURE1000`
 #' @source unknown
 "IMMPROT_SIGNATURE1000"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used
+#'
+#' @format ## `IMMPROT`
+#' @source unknown
+"IMMPROT"
 
 #' A dataset used by `compute_deconvolution`
 #'
