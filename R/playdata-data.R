@@ -239,3 +239,11 @@
 #' @format ## `TISSUE`
 #' @source unknown
 "TISSUE"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `TISSUE_GRP`
+#' @source unknown
+"TISSUE_GRP"
