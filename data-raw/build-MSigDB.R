@@ -12,11 +12,20 @@ all_gene_sets_xt = msigdbr(species = all_species[20,1][[1]])
 
 all_gene_sets = msigdbr(species = "Homo sapiens")
 
-gmt <-  playbase::convert.gmt(
-    all_gene_sets$gene_symbol,
-    gs_name = all_gene_sets$gs_name)
-
-playbase::write.gmt(gmt, file= file.path("data-raw","extdata","gmt_msigdb","all_gene_sets.txt"))
-
+# save metadata
 meta <- all_gene_sets[!duplicated(all_gene_sets[ , c("gs_name")]),]
 write.csv(meta ,file.path("data-raw","extdata","gmt_msigdb","meta.csv"))
+
+# save pathways by database, matching legacy system
+dbs <- unique(all_gene_sets$gs_cat)
+
+lapply(dbs, function(x){
+    x = dbs[1]
+    dbs_gs <- all_gene_sets[all_gene_sets$gs_cat == x,] 
+    gmt <-  playbase::convert.gmt(
+        dbs_gs$gene_symbol,
+        gs_name = dbs_gs$gs_name)
+    playbase::write.gmt(
+        gmt,
+        file= file.path("data-raw","extdata","gmt_msigdb",paste(x,"MSigDB", sep = ".")))
+        })
