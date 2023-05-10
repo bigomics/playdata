@@ -72,7 +72,6 @@ build.computeGeneGenesetTSNE <- function(X, G) {
 
 }
 
-
 if(0) {
 
     ##
@@ -214,9 +213,9 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
 
     # seq_max <- seq(100,1000,100)
 
-    # unlist(lapply(seq_max, function(x){
-    #     sum(gmt.size >= 15 & gmt.size <= 200)
-    # }) -> n_genesets
+    # unlist(lapply(seq_max, function(x,y){
+    #     sum(gmt.size <= x)
+    # })) -> n_genesets
 
     # #plot seq_max and n_genesets
 
@@ -224,9 +223,37 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     # plot(seq_max, n_genesets, xlim = rev(range(seq_max)))
     # dev.off()
 
+    # seq_min <- seq(5,20,1)
 
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
+    # unlist(lapply(seq_min, function(x){
+    #     sum(gmt.size >= x)
+    # })) -> n_genesets
+
+    # #plot seq_max and n_genesets
+
+    # png()
+    # plot(seq_min, n_genesets)
+    # dev.off()
+
+
+    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)]
+    
+    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)] #legacy
+
+    length(gmt.all)
     ##gmt.all <- gmt.all[1:2000]
+
+    # seq_max <- seq(100,1000,100)
+
+    # unlist(lapply(seq_max, function(x){
+    #     sum(gmt.size >= 15 & gmt.size <= x)
+    # })) -> n_genesets
+
+    # #plot seq_max and n_genesets
+
+    # png()
+    # plot(seq_max, n_genesets, xlim = rev(range(seq_max)))
+    # dev.off()
 
     ## ------------- filter genes by minimum frequency and chrom
     ##symbol = unlist(as.list(org.Hs.egSYMBOL))
@@ -247,6 +274,7 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
     gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)]
+    #gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
     length(gmt.all)
 
     ## build huge sparsematrix gene x genesets
@@ -275,6 +303,11 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
 load(file="data-raw/extdata/gmt-all.rda",verbose=1)
 
 gmt.all <- gmt.all[!duplicated(names(gmt.all))]
+length(gmt.all)
 
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
+
+dim(GSET_SPARSEG_XL)
+rownames(GSET_SPARSEG_XL)[grep("Brachydactyly", rownames(GSET_SPARSEG_XL))]
+
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
