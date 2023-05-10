@@ -9,8 +9,8 @@ path_to_gmt <- "data-raw/extdata/gmt/"
 ##--------------- cell type signatures from ImSig ----------------------
 ##----------------------------------------------------------------------
 S <- read.csv("data-raw/extdata/imsig-signatures-genes.csv", skip=2)
-imsig.gmt <- tapply( S$Gene.Symbol, S$ImSig.cell.type, list)
-imsig.gmt <- lapply(imsig.gmt, as.character)
+
+imsig.gmt <- convert.gmt(S$Gene.Symbol, S$ImSig.cell.type)
 playbase::write.gmt(imsig.gmt, file= paste0(path_to_gmt,"celltype_imsig.gmt"))
 
 ##----------------------------------------------------------------------
