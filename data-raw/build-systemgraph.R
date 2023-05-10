@@ -211,7 +211,21 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     ##------------- filter by size
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)]
+
+    # seq_max <- seq(100,1000,100)
+
+    # unlist(lapply(seq_max, function(x){
+    #     sum(gmt.size >= 15 & gmt.size <= 200)
+    # }) -> n_genesets
+
+    # #plot seq_max and n_genesets
+
+    # png()
+    # plot(seq_max, n_genesets, xlim = rev(range(seq_max)))
+    # dev.off()
+
+
+    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
     ##gmt.all <- gmt.all[1:2000]
 
     ## ------------- filter genes by minimum frequency and chrom
@@ -259,6 +273,8 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
 ##----------------------------------------------------------------------
 
 load(file="data-raw/extdata/gmt-all.rda",verbose=1)
+
+gmt.all <- gmt.all[!duplicated(names(gmt.all))]
 
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)

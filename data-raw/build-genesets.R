@@ -32,7 +32,25 @@ playbase::write.gmt(xcell.gmt, file=paste0(path_to_gmt,"celltype_xcell.gmt"))
 
 require(parallel)
 gmt.files2 = dir(path_to_gmt, pattern=".gmt$|.txt$", full.names=TRUE)
+
+# remove unwanted files
+
+gsets_irrelevant <- c(
+    "GTEx_Tissue_Expression",
+    "Epigenomics_Roadmap_HM",
+    "NIH_Funded_PIs",
+    "DrugMatrix",
+    "MSigDB",
+    "HDSigDB",
+    "ENCODE",
+    "Old_CMAP",
+    "Enrichr")
+pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
+gmt.files2 <- gmt.files2[grep(pattern_irrelevant, gmt.files2, invert=TRUE)]
+
+
 gmt.all = mclapply(gmt.files2, playbase::read.gmt)
+
 names(gmt.all) = gmt.files2
 names(gmt.all) = gsub(".*/|.txt$|.gmt$", "", names(gmt.all))
 gmt.db = gsub("[_.-].*|.txt$|.gmt$", "", names(gmt.all))
@@ -79,12 +97,4 @@ names(mouse.genes) = toupper(mouse.genes)
 gmt.all <- mclapply(gmt.all[], function(s) setdiff(as.character(mouse.genes[s]),NA), mc.cores=1)
 save(gmt.all, file="data-raw/extdata/gmt-all-mouse.rda")
 saveRDS(gmt.all, file="data-raw/extdata/gmt-all-mouse.rds")
-remove(gmt.all)
-
-
-
-
-##======================================================================
-##======================================================================
-##======================================================================
-
+remove(gmt.all) 
