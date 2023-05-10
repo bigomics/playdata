@@ -44,15 +44,41 @@ gsets_irrelevant <- c(
     "HDSigDB",
     "ENCODE",
     "Old_CMAP",
-    "Enrichr")
+    "Enrichr",
+    "Rare",
+    "LINCS",
+    "Orphanet",
+    "DrugMatrix",
+    "SILAC_Phosphoproteomics",
+    "Proteomics_Drug_Atlas",
+    "ProteomicsDB",
+    "CCLE_Proteomics"
+    )
+
+
+
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
 gmt.files2 <- gmt.files2[grep(pattern_irrelevant, gmt.files2, invert=TRUE)]
-
 
 gmt.all = mclapply(gmt.files2, playbase::read.gmt)
 
 names(gmt.all) = gmt.files2
 names(gmt.all) = gsub(".*/|.txt$|.gmt$", "", names(gmt.all))
+
+# add drug prefix in certain datasets
+gsets_drug_related <- c(
+    "DSigDB",
+    "RNA-Seq_Disease_Gene",
+    "IDG_Drug_Targets")
+
+pattern_to_add_prefix <- paste(gsets_drug_related, collapse = "|")
+
+idx_to_modify <- grep(pattern_to_add_prefix, names(gmt.all))
+
+names(gmt.all)[idx_to_modify] <- paste("Drug", names(gmt.all)[idx_to_modify], sep = "_")
+
+# end of adding drug prefix 
+
 gmt.db = gsub("[_.-].*|.txt$|.gmt$", "", names(gmt.all))
 gmt.db = toupper(gmt.db)
 
@@ -86,6 +112,7 @@ gmt.all <- gmt.all[!duplicated(names(gmt.all))]
 ## save
 gmt.all <- gmt.all[order(names(gmt.all))]
 table(sub(":.*","",names(gmt.all)))
+
 save(gmt.all, file="data-raw/extdata/gmt-all.rda")
 saveRDS(gmt.all, file="data-raw/extdata/gmt-all.rds")
 
