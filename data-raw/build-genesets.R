@@ -52,7 +52,12 @@ gsets_irrelevant <- c(
     "SILAC_Phosphoproteomics",
     "Proteomics_Drug_Atlas",
     "ProteomicsDB",
-    "CCLE_Proteomics"
+    "CCLE_Proteomics",
+    "SysMyo_Muscle_Gene_Sets",
+    "SysMyo_Muscle_Gene_Sets",
+    "GeneSigDB",
+    "CellMarker_Augmented",
+    "PFOCR",
     )
 
 
