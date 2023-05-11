@@ -42,13 +42,21 @@ gsets_irrelevant <- c(
     "DrugMatrix",
     "MSigDB_Computational",
     "MSigDB_Hallmark",
-    "MSigDB_Oncogenic"
+    "MSigDB_Oncogenic",
     "HDSigDB",
     "ENCODE",
     "Old_CMAP",
     "Enrichr",
     "Rare",
     "LINCS",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7",
+    "C8",
     "Orphanet",
     "DrugMatrix",
     "SILAC_Phosphoproteomics",
@@ -117,6 +125,10 @@ gmt.all <- gmt.all[!duplicated(names(gmt.all))]
 gmt.all <- gmt.all[order(names(gmt.all))]
 table(sub(":.*","",names(gmt.all)))
 
+# remove C2:REACTOME as duplicate
+
+gmt.all <-  gmt.all[grep("C2:REACTOME", names(gmt.all), invert = TRUE)]
+length(gmt.all)
 save(gmt.all, file="data-raw/extdata/gmt-all.rda")
 saveRDS(gmt.all, file="data-raw/extdata/gmt-all.rds")
 
