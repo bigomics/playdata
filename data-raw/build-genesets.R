@@ -56,10 +56,8 @@ gsets_irrelevant <- c(
     "SysMyo",
     "GeneSigDB",
     "CellMarker_Augmented",
-    "PFOCR",
+    "PFOCR"
     )
-
-
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
 gmt.files2 <- gmt.files2[grep(pattern_irrelevant, gmt.files2, invert=TRUE)]

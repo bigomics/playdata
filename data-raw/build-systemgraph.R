@@ -211,49 +211,11 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
 
-    # seq_max <- seq(100,1000,100)
+    seq_max <- seq(100,1000,100)
 
-    # unlist(lapply(seq_max, function(x,y){
-    #     sum(gmt.size <= x)
-    # })) -> n_genesets
-
-    # #plot seq_max and n_genesets
-
-    # png()
-    # plot(seq_max, n_genesets, xlim = rev(range(seq_max)))
-    # dev.off()
-
-    # seq_min <- seq(5,20,1)
-
-    # unlist(lapply(seq_min, function(x){
-    #     sum(gmt.size >= x)
-    # })) -> n_genesets
-
-    # #plot seq_max and n_genesets
-
-    # png()
-    # plot(seq_min, n_genesets)
-    # dev.off()
-
-
-    gmt.all <- gmt.all[which(gmt.size >= 10 & gmt.size <= 200)]
-    
-    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)] #legacy
-
-    length(gmt.all)
-    ##gmt.all <- gmt.all[1:2000]
-
-    # seq_max <- seq(100,1000,100)
-
-    # unlist(lapply(seq_max, function(x){
-    #     sum(gmt.size >= 15 & gmt.size <= x)
-    # })) -> n_genesets
-
-    # #plot seq_max and n_genesets
-
-    # png()
-    # plot(seq_max, n_genesets, xlim = rev(range(seq_max)))
-    # dev.off()
+    unlist(lapply(seq_max, function(x,y){
+        sum(gmt.size <= x)
+    })) -> n_genesets
 
     ## ------------- filter genes by minimum frequency and chrom
     ##symbol = unlist(as.list(org.Hs.egSYMBOL))
@@ -273,8 +235,8 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.all <- mclapply(gmt.all, function(s) intersect(s,genes))
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
-    gmt.all <- gmt.all[which(gmt.size >= 10 & gmt.size <= 200)]
-    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
+    # gmt.all <- gmt.all[which(gmt.size >= 10 & gmt.size <= 200)]
+    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
     length(gmt.all)
 
     ## build huge sparsematrix gene x genesets
@@ -306,8 +268,7 @@ gmt.all <- gmt.all[!duplicated(names(gmt.all))]
 length(gmt.all)
 
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
-
+rownames(GSET_SPARSEG_XL)[grep("MGS1029",rownames(GSET_SPARSEG_XL))]
 dim(GSET_SPARSEG_XL)
-rownames(GSET_SPARSEG_XL)[grep("Brachydactyly", rownames(GSET_SPARSEG_XL))]
 
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
