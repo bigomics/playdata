@@ -40,7 +40,9 @@ gsets_irrelevant <- c(
     "Epigenomics_Roadmap_HM",
     "NIH_Funded_PIs",
     "DrugMatrix",
-    "MSigDB",
+    "MSigDB_Computational",
+    "MSigDB_Hallmark",
+    "MSigDB_Oncogenic"
     "HDSigDB",
     "ENCODE",
     "Old_CMAP",
