@@ -192,9 +192,6 @@ if(0) {
 
 }
 
-
-
-
 build.createSparseGenesetMatrix <- function(gmt.all) {
     
     ## ----------- Get all official gene symbols
@@ -211,12 +208,11 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
 
-    seq_max <- seq(100,1000,100)
+    gmt.all <- gmt.all[which(gmt.size >= 10 & gmt.size <= 200)]
+    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)] #legacy
 
-    unlist(lapply(seq_max, function(x,y){
-        sum(gmt.size <= x)
-    })) -> n_genesets
-
+    length(gmt.all)
+    
     ## ------------- filter genes by minimum frequency and chrom
     ##symbol = unlist(as.list(org.Hs.egSYMBOL))
     ##refseq = unlist(as.list(org.Hs.egREFSEQ))
@@ -235,8 +231,8 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.all <- mclapply(gmt.all, function(s) intersect(s,genes))
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
-    # gmt.all <- gmt.all[which(gmt.size >= 10 & gmt.size <= 200)]
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
+    gmt.all <- gmt.all[which(gmt.size >= 10 & gmt.size <= 200)]
+    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
     length(gmt.all)
 
     ## build huge sparsematrix gene x genesets
@@ -266,9 +262,6 @@ load(file="data-raw/extdata/gmt-all.rda",verbose=1)
 
 gmt.all <- gmt.all[!duplicated(names(gmt.all))]
 length(gmt.all)
-
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
-rownames(GSET_SPARSEG_XL)[grep("MGS1029",rownames(GSET_SPARSEG_XL))]
 dim(GSET_SPARSEG_XL)
-
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
