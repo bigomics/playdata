@@ -208,8 +208,8 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
 
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
-    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)] #legacy
+    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
+    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)] #legacy
 
     length(gmt.all)
     
@@ -219,7 +219,7 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     genes.table <- table(unlist(gmt.all))
     summary(as.integer(genes.table))
     length(gmt.all)
-    ##genes <- names(which( genes.table >= 10 & genes.table <= 1000  ))
+    #genes <- names(which( genes.table >= 10 & genes.table <= 1000  ))
     genes <- names(which( genes.table >= 10 ))
     genes <- genes[grep("^LOC|RIK$",genes,invert=TRUE)]
     genes <- intersect(genes, known.symbols)
@@ -231,8 +231,8 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
     gmt.all <- mclapply(gmt.all, function(s) intersect(s,genes))
     gmt.size <- sapply(gmt.all,length)
     summary(gmt.size)
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
-    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
+    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
+    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
     length(gmt.all)
 
     ## build huge sparsematrix gene x genesets
