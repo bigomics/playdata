@@ -110,6 +110,16 @@
 #' @source unknown
 "GSET_PREFIX_REGEX"
 
+#' Raw number of genes per geneset
+#'
+#' 
+#'
+#' @format ## `GSET_SIZE`
+#' A numeric vector of number of genes per geneset, names attribute refer to the geneset name.
+#' @source unknown
+"GSET_SIZE"
+
+
 #' Some kind of sparse matrix dataset?
 #'
 #' No idea what this data is but it is used in `test_genesets`.

@@ -261,7 +261,11 @@ build.createSparseGenesetMatrix <- function(gmt.all) {
 load(file="data-raw/extdata/gmt-all.rda",verbose=1)
 
 gmt.all <- gmt.all[!duplicated(names(gmt.all))]
-length(gmt.all)
+
+GSET_SIZE <- sapply(gmt.all,length)
+
+usethis::use_data(GSET_SIZE, overwrite = TRUE)
+
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
-dim(GSET_SPARSEG_XL)
+
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
