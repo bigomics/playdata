@@ -98,6 +98,14 @@
 #'
 #' No idea what this data is but it is used.
 #'
+#' @format ## `getGSETS`
+#' @source unknown
+"getGSETS"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
 #' @format ## `GSET_GENES`
 #' @source unknown
 "GSET_GENES"
@@ -169,13 +177,21 @@
 #' @source unknown
 "iGSETS"
 
-#' A dataset used by `compute_deconvolution`
+#' A dataset used by
 #'
-#' No idea what this data is but it is used in `compute_deconvolution`.
+#' No idea what this data is but it is used
 #'
 #' @format ## `IMMPROT_SIGNATURE1000`
 #' @source unknown
 "IMMPROT_SIGNATURE1000"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used
+#'
+#' @format ## `IMMPROT`
+#' @source unknown
+"IMMPROT"
 
 #' A dataset used by `compute_deconvolution`
 #'
@@ -249,3 +265,11 @@
 #' @format ## `TISSUE`
 #' @source unknown
 "TISSUE"
+
+#' A dataset used by
+#'
+#' No idea what this data is but it is used.
+#'
+#' @format ## `TISSUE_GRP`
+#' @source unknown
+"TISSUE_GRP"
