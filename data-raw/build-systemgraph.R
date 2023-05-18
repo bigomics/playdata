@@ -269,3 +269,13 @@ usethis::use_data(GSET_SIZE, overwrite = TRUE)
 GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
 
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
+
+# save GSET meta info into playdata
+
+info_MSigDB <-  read.csv(file.path("data-raw","extdata","gmt","info_MSigDB.csv"))
+
+info_enrichR <-  read.csv(file.path("data-raw","extdata","gmt","info_enrichR.csv"))
+
+GSET_INFO <- list(info_MSigDB, info_enrichR)
+
+usethis::use_data(GSET_INFO, overwrite = TRUE)
