@@ -14,7 +14,8 @@ all_gene_sets = msigdbr(species = "Homo sapiens")
 
 # save metadata
 meta <- all_gene_sets[!duplicated(all_gene_sets[ , c("gs_name")]),]
-write.csv(meta ,file.path("data-raw","extdata","gmt","meta.csv"))
+
+write.csv(meta ,file.path("data-raw","extdata","gmt","MSigDB_info.csv"), row.names = FALSE)
 
 # save pathways by database, matching legacy system
 dbs <- unique(all_gene_sets$gs_cat)

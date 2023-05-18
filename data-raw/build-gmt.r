@@ -60,4 +60,4 @@ lapply(dbs$libraryName, function(db_name){
     write(rawToChar(resp$content), file = file.path("data-raw","extdata","gmt",filename))
 })
 
-write.csv(dbs, file.path("data-raw","extdata","gmt","dbs.csv"))
+write.csv(dbs, file.path("data-raw","extdata","gmt","info_enrichR.csv"), row.names=FALSE)
