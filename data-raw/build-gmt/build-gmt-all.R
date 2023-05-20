@@ -10,7 +10,7 @@ path_to_gmt <- "data-raw/extdata/gmt/"
 ##----------------------------------------------------------------------
 S <- read.csv("data-raw/extdata/imsig-signatures-genes.csv", skip=2)
 
-imsig.gmt <- convert.gmt(S$Gene.Symbol, S$ImSig.cell.type)
+imsig.gmt <- playbase::convert.gmt(S$Gene.Symbol, S$ImSig.cell.type)
 playbase::write.gmt(imsig.gmt, file= paste0(path_to_gmt,"celltype_imsig.gmt"))
 
 ##----------------------------------------------------------------------
@@ -67,7 +67,9 @@ gsets_irrelevant <- c(
     "SysMyo",
     "GeneSigDB",
     "CellMarker_Augmented",
-    "PFOCR"
+    "PFOCR",
+    "Elsevier_Pathway_Collection",
+    "BioCarta_2016"
     )
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
@@ -91,6 +93,38 @@ idx_to_modify <- grep(pattern_to_add_prefix, names(gmt.all))
 names(gmt.all)[idx_to_modify] <- paste("Drug", names(gmt.all)[idx_to_modify], sep = "_")
 
 # end of adding drug prefix 
+
+# convert bioplex hugo symbol to gene id, in order to access database
+
+ensembl <- biomaRt::useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+
+# Function to get the gene ID from HGNC
+getGeneID <- function(gene){
+    gene_info <- biomaRt::getBM(
+        attributes = c("hgnc_symbol", "entrezgene_id"),
+        filters = "hgnc_symbol",
+        values = gene,
+        mart = ensembl)
+        return(gene_info)
+}
+
+bioplex_ds_id <- grep("BioPlex",names(gmt.all))
+
+bioplex_gene_ids <- data.frame(hgnc = names(gmt.all[[bioplex_ds_id]]))
+
+bioplex_gene_mapping <- getGeneID(bioplex_gene_ids$hgnc)
+
+
+bioplex_gene_ids$entrezgene_id <- bioplex_gene_mapping$entrezgene_id[match(bioplex_gene_ids$hgnc, bioplex_gene_mapping$hgnc_symbol)] 
+
+bioplex_gene_ids$entrezgene_id <- as.character(bioplex_gene_ids$entrezgene_id)
+bioplex_gene_ids$comb <- apply(bioplex_gene_ids, 1, paste,collapse = "_")
+bioplex_gene_ids$comb <- sub("_NA","",bioplex_gene_ids$comb)
+
+names(gmt.all[[bioplex_ds_id]]) <- bioplex_gene_ids$comb
+
+# end of convert bioplex hugo symbol to gene id, in order to access database
+
 
 gmt.db = gsub("[_.-].*|.txt$|.gmt$", "", names(gmt.all))
 gmt.db = toupper(gmt.db)
@@ -141,4 +175,4 @@ names(mouse.genes) = toupper(mouse.genes)
 gmt.all <- mclapply(gmt.all[], function(s) setdiff(as.character(mouse.genes[s]),NA), mc.cores=1)
 save(gmt.all, file="data-raw/extdata/gmt-all-mouse.rda")
 saveRDS(gmt.all, file="data-raw/extdata/gmt-all-mouse.rds")
-remove(gmt.all) 
+remove(gmt.all)
