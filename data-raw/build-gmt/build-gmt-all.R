@@ -39,6 +39,7 @@ gsets_irrelevant <- c(
     "GTEx_Tissue_Expression",
     "Epigenomics_Roadmap_HM",
     "NIH_Funded_PIs",
+    "Genes_Associated_with_NIH_Grants",
     "DrugMatrix",
     "MSigDB_Computational",
     "MSigDB_Hallmark",
