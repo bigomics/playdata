@@ -118,6 +118,16 @@
 #' @source unknown
 "GSET_PREFIX_REGEX"
 
+#' Raw number of genes per geneset
+#'
+#' 
+#'
+#' @format ## `GSET_SIZE`
+#' A numeric vector of number of genes per geneset, names attribute refer to the geneset name.
+#' @source unknown
+"GSET_SIZE"
+
+
 #' Some kind of sparse matrix dataset?
 #'
 #' No idea what this data is but it is used in `test_genesets`.
@@ -126,6 +136,13 @@
 #' A dgCMatrix / Matrix object
 #' @source unknown
 "GSET_SPARSEG_XL"
+
+#' Information for database source of Omics Playground Genesets
+#'
+#' 
+#' @format ## list containign data.frames with metadata for databases
+#' @source MSigDB (https://www.gsea-msigdb.org/gsea/msigdb) and  enrichR (https://maayanlab.cloud/Enrichr/)
+"GSET_INFO"
 
 #' A dataset used by
 #'
@@ -142,6 +159,9 @@
 #' @format ## `GSETxGENE`
 #' @source unknown
 "GSETxGENE"
+
+
+
 
 #' A dataset used by `compute_deconvolution`
 #'

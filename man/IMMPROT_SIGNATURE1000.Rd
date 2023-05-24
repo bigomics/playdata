@@ -3,7 +3,7 @@
 \docType{data}
 \name{IMMPROT_SIGNATURE1000}
 \alias{IMMPROT_SIGNATURE1000}
-\title{A dataset used by `compute_deconvolution`}
+\title{A dataset used by}
 \format{
 ## `IMMPROT_SIGNATURE1000`
 }
@@ -14,6 +14,6 @@ unknown
 IMMPROT_SIGNATURE1000
 }
 \description{
-No idea what this data is but it is used in `compute_deconvolution`.
+No idea what this data is but it is used
 }
 \keyword{datasets}
