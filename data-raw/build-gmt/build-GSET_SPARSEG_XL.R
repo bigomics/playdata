@@ -192,68 +192,6 @@ if(0) {
 
 }
 
-build.createSparseGenesetMatrix <- function(gmt.all) {
-    
-    ## ----------- Get all official gene symbols
-    library(org.Hs.eg.db)
-    ##library(org.Mm.eg.db)
-    symbol <- as.list(org.Hs.egSYMBOL)
-    known.symbols <- sort(unique(unlist(symbol)))
-    ##mm.symbol <- as.list( org.Mm.egSYMBOL)
-    ##mm.symbol <- sort(unique(unlist(mm.symbol)))
-    ##tail(mm.symbol,100)
-    ##known.symbols <- unique(c(known.symbols, toupper(mm.symbol)))
-
-    ##------------- filter by size
-    gmt.size <- sapply(gmt.all,length)
-    summary(gmt.size)
-
-    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 1000)] #legacy
-
-    length(gmt.all)
-    
-    ## ------------- filter genes by minimum frequency and chrom
-    ##symbol = unlist(as.list(org.Hs.egSYMBOL))
-    ##refseq = unlist(as.list(org.Hs.egREFSEQ))
-    genes.table <- table(unlist(gmt.all))
-    summary(as.integer(genes.table))
-    length(gmt.all)
-    #genes <- names(which( genes.table >= 10 & genes.table <= 1000  ))
-    genes <- names(which( genes.table >= 10 ))
-    genes <- genes[grep("^LOC|RIK$",genes,invert=TRUE)]
-    genes <- intersect(genes, known.symbols)
-    annot <- playbase::ngs.getGeneAnnotation(genes)
-    genes <- genes[ !is.na(annot$chr) ]
-    length(genes)
-
-    ## Filter genesets with permitted genes (official and min.sharing)
-    gmt.all <- mclapply(gmt.all, function(s) intersect(s,genes))
-    gmt.size <- sapply(gmt.all,length)
-    summary(gmt.size)
-    # gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 200)]
-    gmt.all <- gmt.all[which(gmt.size >= 15 & gmt.size <= 500)] #legacy
-    length(gmt.all)
-
-    ## build huge sparsematrix gene x genesets
-    genes <- sort(genes)
-    idx.j <- mclapply(gmt.all[], function(s) match(s,genes))
-    idx.i <- lapply(1:length(gmt.all), function(i) rep(i,length(idx.j[[i]])))
-    ii <- unlist(idx.i)
-    jj <- unlist(idx.j)
-    length(ii)
-    length(jj)
-    G <- Matrix::sparseMatrix( i=ii, j=jj, x=rep(1,length(ii)),
-                      dims = c(length(gmt.all), length(genes)) )
-    dim(G)
-    
-    colnames(G) = genes
-    rownames(G) = names(gmt.all)
-
-    return(G)
-}
-
-
 ##----------------------------------------------------------------------
 ## From geneset GMT file, create large sparse 0/1 matrix.
 ##----------------------------------------------------------------------
@@ -266,7 +204,7 @@ GSET_SIZE <- sapply(gmt.all,length)
 
 usethis::use_data(GSET_SIZE, overwrite = TRUE)
 
-GSET_SPARSEG_XL <- build.createSparseGenesetMatrix(gmt.all)
+GSET_SPARSEG_XL <- playbase::createSparseGenesetMatrix(gmt.all)
 
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
 

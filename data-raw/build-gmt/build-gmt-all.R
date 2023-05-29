@@ -125,39 +125,10 @@ names(gmt.all[[bioplex_ds_id]]) <- bioplex_gene_ids$comb
 
 # end of convert bioplex hugo symbol to gene id, in order to access database
 
+gmt.db <- gsub("[_.-].*|.txt$|.gmt$", "", names(gmt.all))
 
-gmt.db = gsub("[_.-].*|.txt$|.gmt$", "", names(gmt.all))
-gmt.db = toupper(gmt.db)
+gmt.all <- playbase::clean_gmt(gmt.all, gmt.db)
 
-table(gmt.db)
-for(i in 1:length(gmt.all)) {
-    names(gmt.all[[i]]) <- sub("\\(GO:","(GO_",names(gmt.all[[i]]))
-    names(gmt.all[[i]]) <- gsub("%","_",names(gmt.all[[i]])) # substitute % sign in wikipathways
-    names(gmt.all[[i]]) <- sub(":","",names(gmt.all[[i]]))
-    ## names(gmt.all[[i]]) <- tolower(names(gmt.all[[i]]))
-    names(gmt.all[[i]]) <- paste0(toupper(gmt.db[i]),":",names(gmt.all[[i]]))
-}
-j0 = grep("_up", names(gmt.all))
-j1 = grep("_down", names(gmt.all))
-for(i in j0) {
-    names(gmt.all[[i]]) <- paste0(names(gmt.all[[i]])," (up)")
-}
-for(i in j1) {
-    names(gmt.all[[i]]) <- paste0(names(gmt.all[[i]])," (down)")
-}
-names(gmt.all) <- NULL
-gmt.all <- unlist(gmt.all,recursive=FALSE, use.names=TRUE)
-length(gmt.all)
-
-## get rid of trailing numeric values
-gmt.all <-  mclapply(gmt.all, function(x) gsub("[,].*","",x), mc.cores=1)
-
-## order by length and take out duplicated sets (only by name)
-gmt.all <- gmt.all[order(-sapply(gmt.all,length))]
-gmt.all <- gmt.all[!duplicated(names(gmt.all))]
-
-## save
-gmt.all <- gmt.all[order(names(gmt.all))]
 table(sub(":.*","",names(gmt.all)))
 
 # remove C2:REACTOME as duplicate
