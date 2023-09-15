@@ -13,8 +13,8 @@ require(org.Hs.eg.db)
 GENE_TITLE  = unlist(as.list(org.Hs.egGENENAME))
 GENE_SYMBOL = unlist(as.list(org.Hs.egSYMBOL))
 names(GENE_TITLE) = GENE_SYMBOL
-usethis::use_data(GENE_TITLE)
-usethis::use_data(GENE_SYMBOL)
+usethis::use_data(GENE_TITLE, overwrite = TRUE)
+usethis::use_data(GENE_SYMBOL, overwrite = TRUE)
 
 ##GSET.PREFIX.REGEX = paste(paste0("^",GSET.PREFIXES,"_"),collapse="|")
 GSET_PREFIX_REGEX="^BIOCARTA_|^C2_|^C3_|^C7_|^CHEA_|^GOBP_|^GOCC_|^GOMF_|^HALLMARK_|^KEA_|^KEGG_|^PID_|^REACTOME_|^ST_"
