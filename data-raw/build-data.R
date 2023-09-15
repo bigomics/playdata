@@ -5,7 +5,6 @@
 library(playbase)
 
 ## These source files are still in OPG but probably be moved here.
-FILES = "~/Playground/omicsplayground/lib"
 
 ##---------------------------------------------------------
 ## All gene families in Human UPPER CASE
@@ -18,17 +17,17 @@ usethis::use_data(GENE_SYMBOL, overwrite = TRUE)
 
 ##GSET.PREFIX.REGEX = paste(paste0("^",GSET.PREFIXES,"_"),collapse="|")
 GSET_PREFIX_REGEX="^BIOCARTA_|^C2_|^C3_|^C7_|^CHEA_|^GOBP_|^GOCC_|^GOMF_|^HALLMARK_|^KEA_|^KEGG_|^PID_|^REACTOME_|^ST_"
-usethis::use_data(GSET_PREFIX_REGEX)
+usethis::use_data(GSET_PREFIX_REGEX, overwrite = TRUE)
 
 ##---------------------------------------------------------
-GENE_SUMMARY = read.csv(file.path(FILES,"gene-summary.csv"),row.names=1)
+GENE_SUMMARY = read.csv(file.path("data-raw/genes/gene-summary.csv"),row.names=1)
 GENE_SUMMARY = array(GENE_SUMMARY[,1], dimnames=list(rownames(GENE_SUMMARY)))
 usethis::use_data(GENE_SUMMARY)
 
 ##---------------------------------------------------------
 ## GENExGENE <- readRDS(file=file.path(FILES,"GENExGENE-cosSparseKNN500-XL.rds"))
-GSETxGENE <- readRDS(file.path(FILES,"gset-sparseG-XL.rds"))
-usethis::use_data(GSETxGENE)
+GSETxGENE <- readRDS(file.path("../omicsplayground_mmm/lib","gset-sparseG-XL.rds"))
+usethis::use_data(GSETxGENE, overwrite = TRUE)
 
 ##---------------------------------------------------------
 load(file.path(FILES,"gmt-all.rda"),verbose=1)
