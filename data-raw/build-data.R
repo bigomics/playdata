@@ -26,17 +26,17 @@ usethis::use_data(GENE_SUMMARY)
 
 ##---------------------------------------------------------
 ## GENExGENE <- readRDS(file=file.path(FILES,"GENExGENE-cosSparseKNN500-XL.rds"))
-GSETxGENE <- readRDS(file.path("../omicsplayground_mmm/lib","gset-sparseG-XL.rds"))
+GSETxGENE <- playdata::GSET_SPARSEG_XL
 usethis::use_data(GSETxGENE, overwrite = TRUE)
 
 ##---------------------------------------------------------
-load(file.path(FILES,"gmt-all.rda"),verbose=1)
+load(file.path("data-raw/extdata","gmt-all.rda"),verbose=1)
 GSETS = gmt.all;remove(gmt.all)
 ##usethis::use_data(GSETS)
 
 ##---------------------------------------------------------
 message("[INIT] parsing gene families...")
-FAMILIES <- pgx.getGeneFamilies(GENE_SYMBOL, FILES=FILES, min.size=10, max.size=9999)
+FAMILIES <- pgx.getGeneFamilies(GENE_SYMBOL, min.size=10, max.size=9999)
 #fam.file <- file.path(FILES,"custom-families.gmt")
 #if(file.exists(fam.file)) {
 #  custom.gmt = read.gmt(file.path(FILES,"custom-families.gmt"),add.source=TRUE)
@@ -49,7 +49,7 @@ names(f1) <- paste0("FAMILY:",names(f1))
 names(f1) <- sub("FAMILY:<all>","<all>",names(f1))
 GSETS <- c(GSETS,f1)
 
-usethis::use_data(FAMILIES)
+usethis::use_data(FAMILIES, overwrite = TRUE)
 usethis::use_data(GSETS, overwrite=TRUE)
 
 ##---------------------------------------------------------
@@ -67,15 +67,15 @@ names(iGSETS) <- names(GSETS)
 object.size(GSETS) / 1e6
 object.size(iGSETS) / 1e6
 
-usethis::use_data(iGSETS)
-usethis::use_data(GSET_GENES)
+usethis::use_data(iGSETS, overwrite = TRUE)
+usethis::use_data(GSET_GENES, overwrite = TRUE)
 ## usethis::use_data(getGSETS)   ## can a function be saved as data too???
 
 ##---------------------------------------------------------
 message("[INIT] parsing collections...")
 COLLECTIONS <- pgx.getGeneSetCollections(names(GSETS), min.size=10, max.size=99999)
 COLLECTIONS <- COLLECTIONS[order(names(COLLECTIONS))]
-usethis::use_data(COLLECTIONS)
+usethis::use_data(COLLECTIONS, overwrite = TRUE)
 
 ##-----------------------------------------------------------------------------
 ## TISSUE/REFERENCE data sets
