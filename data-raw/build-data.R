@@ -5,7 +5,6 @@
 library(playbase)
 
 ## These source files are still in OPG but probably be moved here.
-FILES = "~/Playground/omicsplayground/lib"
 
 ##---------------------------------------------------------
 ## All gene families in Human UPPER CASE
@@ -13,31 +12,31 @@ require(org.Hs.eg.db)
 GENE_TITLE  = unlist(as.list(org.Hs.egGENENAME))
 GENE_SYMBOL = unlist(as.list(org.Hs.egSYMBOL))
 names(GENE_TITLE) = GENE_SYMBOL
-usethis::use_data(GENE_TITLE)
-usethis::use_data(GENE_SYMBOL)
+usethis::use_data(GENE_TITLE, overwrite = TRUE)
+usethis::use_data(GENE_SYMBOL, overwrite = TRUE)
 
 ##GSET.PREFIX.REGEX = paste(paste0("^",GSET.PREFIXES,"_"),collapse="|")
 GSET_PREFIX_REGEX="^BIOCARTA_|^C2_|^C3_|^C7_|^CHEA_|^GOBP_|^GOCC_|^GOMF_|^HALLMARK_|^KEA_|^KEGG_|^PID_|^REACTOME_|^ST_"
-usethis::use_data(GSET_PREFIX_REGEX)
+usethis::use_data(GSET_PREFIX_REGEX, overwrite = TRUE)
 
 ##---------------------------------------------------------
-GENE_SUMMARY = read.csv(file.path(FILES,"gene-summary.csv"),row.names=1)
+GENE_SUMMARY = read.csv(file.path("data-raw/genes/gene-summary.csv"),row.names=1)
 GENE_SUMMARY = array(GENE_SUMMARY[,1], dimnames=list(rownames(GENE_SUMMARY)))
 usethis::use_data(GENE_SUMMARY)
 
 ##---------------------------------------------------------
 ## GENExGENE <- readRDS(file=file.path(FILES,"GENExGENE-cosSparseKNN500-XL.rds"))
-GSETxGENE <- readRDS(file.path(FILES,"gset-sparseG-XL.rds"))
-usethis::use_data(GSETxGENE)
+GSETxGENE <- playdata::GSET_SPARSEG_XL
+usethis::use_data(GSETxGENE, overwrite = TRUE)
 
 ##---------------------------------------------------------
-load(file.path(FILES,"gmt-all.rda"),verbose=1)
+load(file.path("data-raw/extdata","gmt-all.rda"),verbose=1)
 GSETS = gmt.all;remove(gmt.all)
 ##usethis::use_data(GSETS)
 
 ##---------------------------------------------------------
 message("[INIT] parsing gene families...")
-FAMILIES <- pgx.getGeneFamilies(GENE_SYMBOL, FILES=FILES, min.size=10, max.size=9999)
+FAMILIES <- pgx.getGeneFamilies(GENE_SYMBOL, min.size=10, max.size=9999)
 #fam.file <- file.path(FILES,"custom-families.gmt")
 #if(file.exists(fam.file)) {
 #  custom.gmt = read.gmt(file.path(FILES,"custom-families.gmt"),add.source=TRUE)
@@ -50,7 +49,7 @@ names(f1) <- paste0("FAMILY:",names(f1))
 names(f1) <- sub("FAMILY:<all>","<all>",names(f1))
 GSETS <- c(GSETS,f1)
 
-usethis::use_data(FAMILIES)
+usethis::use_data(FAMILIES, overwrite = TRUE)
 usethis::use_data(GSETS, overwrite=TRUE)
 
 ##---------------------------------------------------------
@@ -68,15 +67,15 @@ names(iGSETS) <- names(GSETS)
 object.size(GSETS) / 1e6
 object.size(iGSETS) / 1e6
 
-usethis::use_data(iGSETS)
-usethis::use_data(GSET_GENES)
+usethis::use_data(iGSETS, overwrite = TRUE)
+usethis::use_data(GSET_GENES, overwrite = TRUE)
 ## usethis::use_data(getGSETS)   ## can a function be saved as data too???
 
 ##---------------------------------------------------------
 message("[INIT] parsing collections...")
 COLLECTIONS <- pgx.getGeneSetCollections(names(GSETS), min.size=10, max.size=99999)
 COLLECTIONS <- COLLECTIONS[order(names(COLLECTIONS))]
-usethis::use_data(COLLECTIONS)
+usethis::use_data(COLLECTIONS, overwrite = TRUE)
 
 ##-----------------------------------------------------------------------------
 ## TISSUE/REFERENCE data sets
