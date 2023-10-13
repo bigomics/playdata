@@ -21,3 +21,6 @@ source("data-raw//build-gmt//build-gmt-all.R")
 # create sparse XL matrix with genesets as rows and genes as columns
 source("data-raw//build-gmt//build-GSET_SPARSEG_XL.R")
 
+# build families
+source("data-raw//build-data.R")
+

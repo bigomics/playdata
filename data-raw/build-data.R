@@ -22,7 +22,7 @@ usethis::use_data(GSET_PREFIX_REGEX, overwrite = TRUE)
 ##---------------------------------------------------------
 GENE_SUMMARY = read.csv(file.path("data-raw/genes/gene-summary.csv"),row.names=1)
 GENE_SUMMARY = array(GENE_SUMMARY[,1], dimnames=list(rownames(GENE_SUMMARY)))
-usethis::use_data(GENE_SUMMARY)
+usethis::use_data(GENE_SUMMARY, overwrite=TRUE)
 
 ##---------------------------------------------------------
 ## GENExGENE <- readRDS(file=file.path(FILES,"GENExGENE-cosSparseKNN500-XL.rds"))
