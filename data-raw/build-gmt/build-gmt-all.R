@@ -69,7 +69,10 @@ gsets_irrelevant <- c(
     "CellMarker_Augmented",
     "PFOCR",
     "Elsevier_Pathway_Collection",
-    "BioCarta_2016"
+    "BioCarta_2016",
+    "HuBMAP",
+    "lncHUB",
+    "UK"
     )
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
