@@ -59,7 +59,7 @@ usethis::use_data(GSETS, overwrite=TRUE)
 ## memory than GSETS. Use of GSETS should be deprecated in the future.
 message("[INIT] converting GSETS to list of integers...")
 GSET_GENES <- sort(unique(unlist(GSETS)))  ## slow...
-iGSETS <- parallel::mclapply(GSETS, function(a) match(a,GSET_GENES))  ## very slow!!!
+iGSETS <- lapply(GSETS, function(a) match(a,GSET_GENES))  ## very slow!!!
 names(iGSETS) <- names(GSETS)
 ## getGSETS <- function(gs) {lapply(iGSETS[gs],function(i) GSET_GENES[i]) }
 
@@ -73,7 +73,7 @@ usethis::use_data(GSET_GENES, overwrite = TRUE)
 
 ##---------------------------------------------------------
 message("[INIT] parsing collections...")
-COLLECTIONS <- pgx.getGeneSetCollections(names(GSETS), min.size=10, max.size=99999)
+COLLECTIONS <- pgx.getGeneSetCollections(gsets = names(GSETS), min.size=10, max.size=99999)
 COLLECTIONS <- COLLECTIONS[order(names(COLLECTIONS))]
 usethis::use_data(COLLECTIONS, overwrite = TRUE)
 
