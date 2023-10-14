@@ -75,7 +75,9 @@ gsets_irrelevant <- c(
     "UK",
     "ARCHS4_Cell-lines",
     "ARCHS4_TFs",
-    "ARCHS4_Tissues"
+    "ARCHS4_Tissues",
+    "GTEx",
+    "HMDB"
     )
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
