@@ -212,10 +212,13 @@ ensembl <- biomaRt::useDataset(dataset = species_info$dataset, mart = ensembl)
 
 annot <- playbase::ngs.getGeneAnnotation(genes, probe_type = "hgnc_symbol", ensembl)
 
+genes_to_keep <- annot[!is.na(annot$gene_biotype),"feat_id"]
+
 GSET_SPARSEG_XL <- playbase::createSparseGenesetMatrix(
     gmt.all,
-    all_genes = unique(unlist(as.list(org.Hs.eg.db::org.Hs.egSYMBOL))),
-    annot = annot
+    all_genes = genes_to_keep,
+    annot = annot,
+    filter_genes = FALSE
     )
 
 usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
