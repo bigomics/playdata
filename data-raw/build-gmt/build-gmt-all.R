@@ -72,7 +72,10 @@ gsets_irrelevant <- c(
     "BioCarta_2016",
     "HuBMAP",
     "lncHUB",
-    "UK"
+    "UK",
+    "ARCHS4_Cell-lines",
+    "ARCHS4_TFs",
+    "ARCHS4_Tissues"
     )
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
