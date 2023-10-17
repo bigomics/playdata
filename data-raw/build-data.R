@@ -68,7 +68,7 @@ usethis::use_data(GSET_GENES, overwrite = TRUE)
 
 ##---------------------------------------------------------
 message("[INIT] parsing collections...")
-COLLECTIONS <- pgx.getGeneSetCollections(gsets = names(GSETS), min.size=10, max.size=99999)
+COLLECTIONS <- pgx.getGeneSetCollections(gsets = names(GSETS))
 COLLECTIONS <- COLLECTIONS[order(names(COLLECTIONS))]
 usethis::use_data(COLLECTIONS, overwrite = TRUE)
 
