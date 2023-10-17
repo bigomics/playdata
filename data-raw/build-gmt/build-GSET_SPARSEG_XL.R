@@ -206,15 +206,14 @@ usethis::use_data(GSET_SIZE, overwrite = TRUE)
 
 genes <- unique(unlist(gmt.all))
 
-species_info <- playbase::SPECIES_TABLE[species_name == "Human"]
-ensembl <- biomaRt::useEnsembl(biomart = "genes", host = species_info$host, version = species_info$version)
-ensembl <- biomaRt::useDataset(dataset = species_info$dataset, mart = ensembl)
+ensembl <- biomaRt::useEnsembl(biomart = "genes", host = "https://www.ensembl.org", version = "GRCh38.p14")
+ensembl <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl", mart = ensembl)
 
 annot <- playbase::ngs.getGeneAnnotation(genes, probe_type = "hgnc_symbol", ensembl)
 
 genes_to_keep <- annot[!is.na(annot$gene_biotype),"feat_id"]
 
-GSET_SPARSEG_XL <- playbase::createSparseGenesetMatrix(
+GSETxGENE <- playbase::createSparseGenesetMatrix(
     gmt.all,
     all_genes = genes_to_keep,
     annot = annot,
