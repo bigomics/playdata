@@ -3,9 +3,10 @@
 \docType{data}
 \name{GSETxGENE}
 \alias{GSETxGENE}
-\title{A dataset used by}
+\title{A collection of genesets used in Omics Playground}
 \format{
-## `GSETxGENE`
+## `GSET_SPARSEG_XL`
+A dgCMatrix / Matrix object
 }
 \source{
 unknown
@@ -14,6 +15,6 @@ unknown
 GSETxGENE
 }
 \description{
-No idea what this data is but it is used.
+Geneset in rows, genes as columns.
 }
 \keyword{datasets}
