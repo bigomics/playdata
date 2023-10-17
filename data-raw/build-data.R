@@ -25,11 +25,6 @@ GENE_SUMMARY = array(GENE_SUMMARY[,1], dimnames=list(rownames(GENE_SUMMARY)))
 usethis::use_data(GENE_SUMMARY, overwrite=TRUE)
 
 ##---------------------------------------------------------
-## GENExGENE <- readRDS(file=file.path(FILES,"GENExGENE-cosSparseKNN500-XL.rds"))
-GSETxGENE <- playdata::GSET_SPARSEG_XL
-usethis::use_data(GSETxGENE, overwrite = TRUE)
-
-##---------------------------------------------------------
 load(file.path("data-raw/extdata","gmt-all.rda"),verbose=1)
 GSETS = gmt.all;remove(gmt.all)
 ##usethis::use_data(GSETS)

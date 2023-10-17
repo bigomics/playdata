@@ -221,7 +221,7 @@ GSET_SPARSEG_XL <- playbase::createSparseGenesetMatrix(
     filter_genes = FALSE
     )
 
-usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
+usethis::use_data(GSETxGENE, overwrite = TRUE)
 
 # save GSET meta info into playdata
 
