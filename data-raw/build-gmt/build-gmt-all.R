@@ -167,11 +167,11 @@ names(gmt.all) <- gsub("_DOWN", "", names(gmt.all))
 gmt.all <-  gmt.all[grep("C2:REACTOME", names(gmt.all), invert = TRUE)]
 
 # merge duplicated DBs
-gmt.db <-sub(":.*","",names(gmt.all)) 
 gsets_dbs <- data.frame(table(sub(":.*","",names(gmt.all))))
-
 colnames(gsets_dbs) <- c("db", "number_genesets")
-write.csv(gsets_dbs, file = "gsets_dbs.csv", row.names = FALSE)
+
+gsets_dbs$PREFIX_SHORT_NAME <- ""
+write.csv(gsets_dbs, file = "data-raw/genesets_map.csv", row.names = FALSE)
 
 save(gmt.all, file="data-raw/extdata/gmt-all.rda")
 saveRDS(gmt.all, file="data-raw/extdata/gmt-all.rds")
