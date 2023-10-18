@@ -151,7 +151,10 @@ split_string <- sapply(split_string, function(x) paste(x, collapse = "_"))
 split_string <- gsub("[_]+", "_", split_string)
 
 # remove trailing _ or __
-gmt.db <- gsub("[_]$", "", split_string)
+split_string <- gsub("[_]$", "", split_string)
+
+# remove leading _ or __
+gmt.db <- gsub("^[_]", "", split_string)
 
 gmt.all <- playbase::clean_gmt(gmt.all, gmt.db)
 
