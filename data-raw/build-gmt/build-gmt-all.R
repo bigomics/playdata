@@ -77,11 +77,22 @@ gsets_irrelevant <- c(
     "ARCHS4_Tissues",
     "GTEx_Tissue",
     "HMDB",
-    "Data_Acquisition_Method"
+    "Data_Acquisition_Method",
+    "CELLTYPE_IMSIG",
+    "CELLTYPE_XCELL",
+    "Chromosome_Location_hg19",
+    "DepMap",
+    "Descartes",
+    "Escape",
+    "PANGLAODB",
+    "TABULA"
     )
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
 gmt.files2 <- gmt.files2[grep(pattern_irrelevant, gmt.files2, invert=TRUE)]
+
+# remove MGI_Mammalian_Phenotype_Level_4 and keep MGI_Mammalian_Phenotype_Level_4_2021
+gmt.files2["MGI_Mammalian_Phenotype_Level_4"] <- NULL
 
 gmt.all = mclapply(gmt.files2, playbase::read.gmt)
 
@@ -172,6 +183,11 @@ colnames(gsets_dbs) <- c("db", "number_genesets")
 
 gsets_dbs$PREFIX_SHORT_NAME <- ""
 write.csv(gsets_dbs, file = "data-raw/genesets_map.csv", row.names = FALSE)
+
+# read curated gsets_dbs and rename genesets
+gset_dbs_curated <- read.csv("data-raw/genesets_map_curated.csv", stringsAsFactors = FALSE)
+
+prefix <- sub(":.*","",names(gmt.all))
 
 save(gmt.all, file="data-raw/extdata/gmt-all.rda")
 saveRDS(gmt.all, file="data-raw/extdata/gmt-all.rds")
