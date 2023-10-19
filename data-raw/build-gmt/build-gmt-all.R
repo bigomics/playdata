@@ -99,7 +99,7 @@ gmt.files2 <- gmt.files2[!gmt.files2%in% c("data-raw/extdata/gmt//MGI_Mammalian_
 
 
 pattern_irrelevant <- paste(gsets_irrelevant, collapse = "|")
-gmt.files2 <- gmt.files2[grep(pattern_irrelevant, gmt.files2, invert=TRUE)]
+gmt.files2 <- gmt.files2[grep(pattern_irrelevant, gmt.files2, invert=TRUE, ignore.case = TRUE)]
 
 # remove MGI_Mammalian_Phenotype_Level_4 and keep MGI_Mammalian_Phenotype_Level_4_2021
 
