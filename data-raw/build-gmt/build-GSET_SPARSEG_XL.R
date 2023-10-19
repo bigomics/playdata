@@ -183,11 +183,7 @@ if(0) {
         pgx.plotDualProjection(gr1, fx=fx)
         pgx.plotDualProjection(gr2, fx=fx)
         pgx.plotDualProjection(gr3, fx=fx)
-        pgx.plotDualProjection(gr4, fx=fx)
-
-
-
-
+        pgx.plotDualProjection(gr4, fx=fx)  
     }
 
 }
