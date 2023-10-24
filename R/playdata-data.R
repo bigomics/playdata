@@ -128,14 +128,14 @@
 "GSET_SIZE"
 
 
-#' Some kind of sparse matrix dataset?
+#' A collection of genesets used in Omics Playground
 #'
-#' No idea what this data is but it is used in `test_genesets`.
+#' Geneset in rows, genes as columns.
 #'
 #' @format ## `GSET_SPARSEG_XL`
 #' A dgCMatrix / Matrix object
 #' @source unknown
-"GSET_SPARSEG_XL"
+"GSETxGENE"
 
 #' Information for database source of Omics Playground Genesets
 #'
@@ -151,17 +151,6 @@
 #' @format ## `GSETS`
 #' @source unknown
 "GSETS"
-
-#' A dataset used by
-#'
-#' No idea what this data is but it is used.
-#'
-#' @format ## `GSETxGENE`
-#' @source unknown
-"GSETxGENE"
-
-
-
 
 #' A dataset used by `compute_deconvolution`
 #'

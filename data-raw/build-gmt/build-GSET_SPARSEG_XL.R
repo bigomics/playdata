@@ -183,11 +183,7 @@ if(0) {
         pgx.plotDualProjection(gr1, fx=fx)
         pgx.plotDualProjection(gr2, fx=fx)
         pgx.plotDualProjection(gr3, fx=fx)
-        pgx.plotDualProjection(gr4, fx=fx)
-
-
-
-
+        pgx.plotDualProjection(gr4, fx=fx)  
     }
 
 }
@@ -204,9 +200,23 @@ GSET_SIZE <- sapply(gmt.all,length)
 
 usethis::use_data(GSET_SIZE, overwrite = TRUE)
 
-GSET_SPARSEG_XL <- playbase::createSparseGenesetMatrix(gmt.all)
+genes <- unique(unlist(gmt.all))
 
-usethis::use_data(GSET_SPARSEG_XL, overwrite = TRUE)
+ensembl <- biomaRt::useEnsembl(biomart = "genes", host = "https://www.ensembl.org", version = "GRCh38.p14")
+ensembl <- biomaRt::useDataset(dataset = "hsapiens_gene_ensembl", mart = ensembl)
+
+annot <- playbase::ngs.getGeneAnnotation(genes, probe_type = "hgnc_symbol", ensembl)
+
+genes_to_keep <- annot[!is.na(annot$gene_biotype),"feat_id"]
+
+GSETxGENE <- playbase::createSparseGenesetMatrix(
+    gmt.all,
+    all_genes = genes_to_keep,
+    annot = annot,
+    filter_genes = FALSE
+    )
+
+usethis::use_data(GSETxGENE, overwrite = TRUE)
 
 # save GSET meta info into playdata
 
