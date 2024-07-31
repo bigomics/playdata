@@ -10,6 +10,12 @@ colnames(data) <- c("chebi", "stId", "reactome_url", "reactome_name", "evidence"
 
 head(data)
 
+# keep Homo sapiens for now
+data <- data[data$species == "Homo sapiens", ]
+
+head(data)
+dim(data)
+
 gmt_data <- data %>%
     group_by(reactome_name, reactome_url) %>%
     summarise(chebi_ids = paste(chebi, collapse = "\t")) %>%
@@ -17,6 +23,6 @@ gmt_data <- data %>%
 
 
 write.table(gmt_data,
-    file = "./data-raw/metabolic_pathways.gmt",
+    file = "./data-raw/metabolic_pathways/metabolic_pathways.gmt",
     sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE
 )
