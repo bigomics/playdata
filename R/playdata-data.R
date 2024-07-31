@@ -120,7 +120,7 @@
 
 #' Raw number of genes per geneset
 #'
-#' 
+#'
 #'
 #' @format ## `GSET_SIZE`
 #' A numeric vector of number of genes per geneset, names attribute refer to the geneset name.
@@ -139,7 +139,7 @@
 
 #' Information for database source of Omics Playground Genesets
 #'
-#' 
+#'
 #' @format ## list containign data.frames with metadata for databases
 #' @source MSigDB (https://www.gsea-msigdb.org/gsea/msigdb) and  enrichR (https://maayanlab.cloud/Enrichr/)
 "GSET_INFO"
@@ -272,3 +272,12 @@
 #' @format ## `TISSUE_GRP`
 #' @source unknown
 "TISSUE_GRP"
+
+
+#' gmt file of reactome metabolites (metabolic pathways vs. chebi ids)
+#'
+#'
+#'
+#' @format ## `gmt`
+#' @source https://reactome.org/
+"REACTOME_METABOLITES"
