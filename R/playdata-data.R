@@ -281,3 +281,11 @@
 #' @format ## `gmt`
 #' @source https://reactome.org/
 "REACTOME_METABOLITES"
+
+#' Annotation table of metabolites
+#'
+#'
+#'
+#' @format ## `data.frame`
+#' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
+"METABOLITE_ANNOTATION"
