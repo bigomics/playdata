@@ -289,3 +289,12 @@
 #' @format ## `data.frame`
 #' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
 "METABOLITE_ANNOTATION"
+
+
+#' Metabolite metadata information
+#'
+#'
+#'
+#' @format ## `data.frame`
+#' @source https://www.ebi.ac.uk/chebi/
+"METABOLITE_METADATA"

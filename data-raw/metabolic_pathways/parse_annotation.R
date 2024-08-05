@@ -27,14 +27,40 @@ data_conversion <- data_conversion[rowSums(is.na(data_conversion[, -1])) < ncol(
 # count unique ids
 length(unique(data_conversion$Query))
 
+colnames(data_conversion)
+colnames(data_chebi)
+
 # merge the two dataframes
 METABOLITE_ANNOTATION <- merge(data_chebi, data_conversion, by.x = "ID", by.y = "Query", all.x = TRUE)
 
+colnames(METABOLITE_ANNOTATION)
 dim(METABOLITE_ANNOTATION)
 
 unique(METABOLITE_ANNOTATION$KEGG)
 
+unique(METABOLITE_ANNOTATION$HMDB)
+
+unique(METABOLITE_ANNOTATION$METLIN)
+
 colnames(METABOLITE_ANNOTATION)
+
+# remove unnecessary columns from annotation
+METABOLITE_ANNOTATION$NAME <- NULL
+METABOLITE_ANNOTATION$CHEBI_ACCESSION <- NULL
+METABOLITE_ANNOTATION$DEFINITION <- NULL
+METABOLITE_ANNOTATION$Match <- NULL
+
+usethis::use_data(METABOLITE_ANNOTATION, overwrite = TRUE)
+
+# prepare metabolite metadata
+
+colnames(data_chebi)
+
+METABOLITE_METADATA <- data_chebi
+
+METABOLITE_ANNOTATION$CHEBI_ACCESSION <- NULL
+
+usethis::use_data(METABOLITE_METADATA, overwrite = TRUE)
 
 # check how many ids map to metabolic pathways
 reactome <- playdata::REACTOME_METABOLITES
@@ -53,5 +79,3 @@ dim(metab_in_pathway)
 
 unique(metab_in_pathway$KEGG)
 unique(metab_in_pathway$HMDB)
-
-usethis::use_data(METABOLITE_ANNOTATION, overwrite = TRUE)
