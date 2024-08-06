@@ -1,9 +1,12 @@
 library(dplyr)
 
 # Read file
-data_chebi <- read.delim("./data-raw/metabolic_pathways/chebi_compounds_20240801_0501.tsv", header = TRUE)
+data_chebi <- readr::read_tsv("./data-raw/metabolic_pathways/chebi_compounds_20240801_0501.tsv")
 
 head(data_chebi)
+
+# this id was not retrieved with read.delim, using read_tsv instead
+"15903" %in% data_chebi$ID
 
 # remove unnecessary columns
 data_chebi <- data_chebi[c("ID", "CHEBI_ACCESSION", "NAME", "DEFINITION")]

@@ -1,7 +1,7 @@
 library(dplyr)
 
 # Read file
-data <- read.delim("./data-raw/metabolic_pathways/ChEBI2Reactome.txt", header = FALSE)
+data <- readr::read_tsv("./data-raw/metabolic_pathways/ChEBI2Reactome.txt")
 
 # Inspect the data to determine the correct number of columns
 head(data)
