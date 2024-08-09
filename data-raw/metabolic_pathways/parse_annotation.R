@@ -43,7 +43,7 @@ unique(METABOLITE_ANNOTATION$KEGG)
 
 unique(METABOLITE_ANNOTATION$HMDB)
 
-unique(METABOLITE_ANNOTATION$METLIN)
+unique(METABOLITE_ANNOTATION$PubChem)
 
 colnames(METABOLITE_ANNOTATION)
 
@@ -80,5 +80,5 @@ metab_in_pathway <- METABOLITE_ANNOTATION[METABOLITE_ANNOTATION$ID %in% reactome
 
 dim(metab_in_pathway)
 
-unique(metab_in_pathway$KEGG)
-unique(metab_in_pathway$HMDB)
+length(unique(metab_in_pathway$KEGG))
+length(unique(metab_in_pathway$HMDB))
