@@ -272,3 +272,11 @@
 #' @format ## `TISSUE_GRP`
 #' @source unknown
 "TISSUE_GRP"
+
+#' A dataset used by
+#'
+#' Phosphosite database downloaded from dbPaf and dbPsp
+#'
+#' @format ## `PHOSPHOSITE`
+#' @source unknown
+"PHOSPHOSITE"
