@@ -306,3 +306,10 @@
 #' @format ## `gmt`
 #' @source Nishida K (2021). AHWikipathwaysDbs: Metabolites linked to WikiPathways pathways (for AnnotationHub). R package version 0.99.4, https://github.com/kozo2/AHWikipathwaysDbs.
 "WP_METABOLITES"
+#' A dataset used by
+#'
+#' Phosphosite database downloaded from dbPaf and dbPsp
+#'
+#' @format ## `PHOSPHOSITE`
+#' @source unknown
+"PHOSPHOSITE"
