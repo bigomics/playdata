@@ -120,7 +120,7 @@
 
 #' Raw number of genes per geneset
 #'
-#' 
+#'
 #'
 #' @format ## `GSET_SIZE`
 #' A numeric vector of number of genes per geneset, names attribute refer to the geneset name.
@@ -139,7 +139,7 @@
 
 #' Information for database source of Omics Playground Genesets
 #'
-#' 
+#'
 #' @format ## list containign data.frames with metadata for databases
 #' @source MSigDB (https://www.gsea-msigdb.org/gsea/msigdb) and  enrichR (https://maayanlab.cloud/Enrichr/)
 "GSET_INFO"
@@ -273,6 +273,39 @@
 #' @source unknown
 "TISSUE_GRP"
 
+
+#' gmt file of reactome metabolites (metabolic pathways vs. chebi ids)
+#'
+#'
+#'
+#' @format ## `gmt`
+#' @source https://reactome.org/
+"REACTOME_METABOLITES"
+
+#' Annotation table of metabolites
+#'
+#'
+#'
+#' @format ## `data.frame`
+#' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
+"METABOLITE_ANNOTATION"
+
+
+#' Metabolite metadata information
+#'
+#'
+#'
+#' @format ## `data.frame`
+#' @source https://www.ebi.ac.uk/chebi/
+"METABOLITE_METADATA"
+
+#' gmt file of WikiPathways metabolites (metabolic pathways vs. chebi ids)
+#'
+#'
+#'
+#' @format ## `gmt`
+#' @source Nishida K (2021). AHWikipathwaysDbs: Metabolites linked to WikiPathways pathways (for AnnotationHub). R package version 0.99.4, https://github.com/kozo2/AHWikipathwaysDbs.
+"WP_METABOLITES"
 #' A dataset used by
 #'
 #' Phosphosite database downloaded from dbPaf and dbPsp
