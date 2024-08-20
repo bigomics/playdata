@@ -13,9 +13,11 @@ data_chebi <- data_chebi[c("ID", "CHEBI_ACCESSION", "NAME", "DEFINITION")]
 
 data_conversion <- read.csv("./data-raw/metabolic_pathways/mapping_metaboanalyst_20240802_1508.csv", header = TRUE)
 
+head(data_conversion)
 dim(data_conversion)
+
 # remove comment column by name comment
-data_conversion <- data_conversion[, !(names(data_conversion) %in% c("Comment", "SMILES"))]
+data_conversion <- data_conversion[, !(names(data_conversion) %in% c("Comment"))]
 
 # convert all columns to character
 data_conversion[] <- lapply(data_conversion, as.character)
