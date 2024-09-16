@@ -97,4 +97,14 @@ gset_size <- sapply(gmt, length)
 gmt <- gmt[gset_size >= 3]
 
 WP_METABOLITES <- gmt
-usethis::use_data(WP_METABOLITES, overwrite = TRUE)
+
+
+metabolic_pathways <- c(REACTOME_METABOLITES, WP_METABOLITES)
+MSETxMETABOLITE <- playbase::createSparseGenesetMatrix(
+    metabolic_pathways,
+    filter_genes = FALSE,
+    min.geneset.size = 3,
+    max.geneset.size = 500
+)
+
+usethis::use_data(MSETxMETABOLITE, overwrite = TRUE)

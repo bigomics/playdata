@@ -299,13 +299,14 @@
 #' @source https://www.ebi.ac.uk/chebi/
 "METABOLITE_METADATA"
 
-#' gmt file of WikiPathways metabolites (metabolic pathways vs. chebi ids)
+#' Sparse matrix with rows as metabolic pathways and columns as metabolites.
 #'
-#'
+#' @description  Combined gmt file of reactome metabolites (metabolic pathways vs. chebi ids) and gmt file of WikiPathways metabolites (metabolic pathways vs. chebi ids) as sparse matrix (rows as metabolic pathways and columns as metabolites).
 #'
 #' @format ## `gmt`
-#' @source Nishida K (2021). AHWikipathwaysDbs: Metabolites linked to WikiPathways pathways (for AnnotationHub). R package version 0.99.4, https://github.com/kozo2/AHWikipathwaysDbs.
-"WP_METABOLITES"
+#' @source Nishida K (2021). AHWikipathwaysDbs: Metabolites linked to WikiPathways pathways (for AnnotationHub). R package version 0.99.4, https://github.com/kozo2/AHWikipathwaysDbs and https://www.ebi.ac.uk/chebi/
+"MSETxMETABOLITE"
+
 #' A dataset used by
 #'
 #' Phosphosite database downloaded from dbPaf and dbPsp
