@@ -313,3 +313,10 @@
 #' @format ## `PHOSPHOSITE`
 #' @source unknown
 "PHOSPHOSITE"
+
+#' PPI dataframe containing from-to edges from mixed
+#' (metabolite+protein) pathways downloaded fromGraphite.
+#'
+#' @format ## `data.frame`
+#' @source https://www.ebi.ac.uk/chebi/
+"GRAPHITE_PPI"
