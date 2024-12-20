@@ -290,7 +290,6 @@
 #' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
 "METABOLITE_ANNOTATION"
 
-
 #' Metabolite metadata information
 #'
 #'
