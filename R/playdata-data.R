@@ -290,7 +290,6 @@
 #' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
 "METABOLITE_ANNOTATION"
 
-
 #' Metabolite metadata information
 #'
 #'
@@ -314,3 +313,10 @@
 #' @format ## `PHOSPHOSITE`
 #' @source unknown
 "PHOSPHOSITE"
+
+#' PPI dataframe containing from-to edges from mixed
+#' (metabolite+protein) pathways downloaded fromGraphite.
+#'
+#' @format ## `data.frame`
+#' @source https://www.ebi.ac.uk/chebi/
+"GRAPHITE_PPI"
