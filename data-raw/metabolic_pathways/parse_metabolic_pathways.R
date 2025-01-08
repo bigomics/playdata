@@ -85,13 +85,15 @@ names(wiki_gmt) <- paste0(wp_name, " [", wp_id,"]")
 #------------------------------------------------------------------------
 
 pw <- data.table::fread("~/Playground/public-db/pathbank.org/pathbank_pathways.csv")
-mx <- data.table::fread("~/Downloads/pathbank_all_metabolites.csv")
-px <- data.table::fread("~/Downloads/pathbank_all_proteins.csv")
+mx <- data.table::fread("~/Playground/public-db/pathbank.org/pathbank_all_metabolites.csv")
+px <- data.table::fread("~/Playground/public-db/pathbank.org/pathbank_all_proteins.csv")
 
 head(pw)
 head(mx)
 dim(mx)
 head(px)
+colSums(!is.na(mx) & mx!="")
+
 
 MX <- tapply( mx[1:100,"ChEBI ID"], mx[1:100,"PathBank ID"], c)
 PATHBANK_MX <- tapply( mx[,"ChEBI ID"], mx[,"PathBank ID"], c)

@@ -273,15 +273,6 @@
 #' @source unknown
 "TISSUE_GRP"
 
-
-#' gmt file of reactome metabolites (metabolic pathways vs. chebi ids)
-#'
-#'
-#'
-#' @format ## `gmt`
-#' @source https://reactome.org/
-"REACTOME_METABOLITES"
-
 #' Annotation table of metabolites
 #'
 #'
@@ -289,6 +280,14 @@
 #' @format ## `data.frame`
 #' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
 "METABOLITE_ANNOTATION"
+
+#' ID conversion table of metabolites
+#'
+#'
+#'
+#' @format ## `data.frame`
+#' @source https://www.metaboanalyst.ca/ and https://www.ebi.ac.uk/chebi/
+"METABOLITE_ID"
 
 #' Metabolite metadata information
 #'
