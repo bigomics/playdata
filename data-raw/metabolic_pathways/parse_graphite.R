@@ -6,10 +6,9 @@
 library(graphite)
 library(igraph)
 
-pathwayDatabases()
-
 ## Collect all edges from all databases: kegg, panther, pathbank,
 ## pharmgkb, reactome, smpdb, wikipathways
+pathwayDatabases()
 ##dbs <- graphite:::.dbs[['hsapiens']]
 dbs <- pathwayDatabases()[pathwayDatabases()$species=="hsapiens",2]
 dbs
@@ -54,8 +53,9 @@ load(file="graphite-edges.rda", verbose=1)
 # Create pathways gene sets
 #------------------------------------------------------------------------
 
+## cleanup names
 gmt1 <- list(CUSTOM = all.nodes)
-pathways <- playbase::clean_gmt(gmt1, "PATHWAY_GRAPHITE")
+pathways <- playbase::clean_gmt(gmt1, "METABOLITE")
 head(names(pathways))
 
 ##pwsize <- sapply(pathways, length)
@@ -76,14 +76,37 @@ MSETxMETABOLITE <- playbase::createSparseGenesetMatrix(
     pathways,
     filter_genes = FALSE,
     min.geneset.size = 3,
-    max.geneset.size = 500
+    max.geneset.size = 1000
 )
+
+## There are many duplicated pathways with different names. We take
+## out the duplicates and retain those with longer (more specific)
+## name.
+len.title <- nchar(rownames(MSETxMETABOLITE))
+ii <- order(-Matrix::rowSums(MSETxMETABOLITE!=0),-len.title)
+MSETxMETABOLITE <- MSETxMETABOLITE[ii,]
+
+dim(MSETxMETABOLITE)
+checksum <- sapply(apply(MSETxMETABOLITE!=0,1,which),sum)
+wdup <- which(duplicated(checksum))  
+sum(duplicated(checksum))
+sum(!duplicated(checksum))
+
+short.title <- gsub("(TG|PC|CL|PE)\\(.*| \\[.*","",names(checksum))
+sum(duplicated(short.title))
+  
+sel <- which(!duplicated(checksum) & !duplicated(short.title))
+length(sel)
+names(checksum)[sel]
+MSETxMETABOLITE <- MSETxMETABOLITE[sel,]
 
 dim(MSETxMETABOLITE)
 dim(playdata::MSETxMETABOLITE)
 head(rownames(MSETxMETABOLITE))
 head(colnames(MSETxMETABOLITE))
 tail(colnames(MSETxMETABOLITE))
+
+## write data object
 usethis::use_data(MSETxMETABOLITE, overwrite = TRUE)
 
 head(colnames(playdata::MSETxMETABOLITE))
@@ -93,6 +116,7 @@ tail(colnames(playdata::MSETxMETABOLITE))
 ## Create PPI edgelist. collapse multiple, count edges
 ##------------------------------------------------------------------------
 library(igraph)
+
 ee <- do.call(rbind, all.edges)
 sum(duplicated(ee))
 gr <- igraph::graph_from_edgelist(ee, directed=FALSE)
@@ -110,3 +134,50 @@ head(GRAPHITE_PPI)
 ## save(GRAPHITE_PPI, file="GRAPHITE_PPI.rda")
 ## load("~/Playground/public-db/pathbank.org/GRAPHITE_PPI.rda",verbose=TRUE)
 usethis::use_data(GRAPHITE_PPI, overwrite = TRUE)
+
+##------------------------------------------------------------------------
+## Create PPI edgelist. collapse multiple, count edges
+##------------------------------------------------------------------------
+
+igraphs <- list()
+i=j=1
+for(i in names(pathways)) {
+  pw <- pathways[[i]]
+  for(j in 1:length(pw)) {
+    gr <- pathwayGraph(pw[[j]], which="mixed")
+    e <- pw@entries[[j]]
+    tt <- paste0(e@database,":",e@title, " [", e@id, "]")
+    graphs[[tt]] <- igraph::graph_from_graphnel(gr)
+  }
+}
+save(graphs, file="graphite-igraphs.rda")
+
+##------------------------------------------------------------------------
+## Extend genesets
+##------------------------------------------------------------------------
+## library(igraph)
+
+## ## write data object
+## M <- playdata::MSETxMETABOLITE
+## dim(M)
+## ppi <- playdata::GRAPHITE_PPI
+## ppi[,1] <- ifelse( grepl("CHEBI",ppi[,1]), ppi[,1], paste0("SYMBOL:",ppi[,1]))
+## ppi[,2] <- ifelse( grepl("CHEBI",ppi[,2]), ppi[,2], paste0("SYMBOL:",ppi[,2]))
+## sel <- which( grepl("CHEBI",ppi[,1]) & grepl("CHEBI",ppi[,2]) & ppi[,3] <= 0.33 )
+## gr <- graph_from_edgelist( as.matrix(ppi[sel,1:2]) )
+## ppi_mat <- as.matrix(gr)
+## dim(ppi_mat)
+## table(colnames(M) %in% rownames(ppi_mat))
+## ## build neigborhood matrix for metabolites
+## ppi0 <- rbind("na"=0, cbind("na"=0, ppi_mat))
+## ii <- match(colnames(M),rownames(ppi0))
+## ii[is.na(ii)] <- 1
+## B <- ppi0[ii,ii]
+## colnames(B)=rownames(B)=colnames(M)
+## diag(B) <- 1
+## ## propagate neighbor
+## M1 <- M %*% B
+## write data object
+#MSETxMETABOLITE2 <- M1
+#usethis::use_data(MSETxMETABOLITE2, overwrite = TRUE)
+
