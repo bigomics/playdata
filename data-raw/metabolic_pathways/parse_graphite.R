@@ -2,13 +2,13 @@
 # Multi-omics pathways edges/links from Graphite
 #------------------------------------------------------------------------
 
-##BiocManager::install("graphite")
+##BiocManager::install(c("graphite","igraph"))
 library(graphite)
 library(igraph)
 
 ## Collect all edges from all databases: kegg, panther, pathbank,
 ## pharmgkb, reactome, smpdb, wikipathways
-pathwayDatabases()
+graphite::pathwayDatabases()
 ##dbs <- graphite:::.dbs[['hsapiens']]
 dbs <- pathwayDatabases()[pathwayDatabases()$species=="hsapiens",2]
 dbs
@@ -17,9 +17,22 @@ pathways <- list()
 db="kegg"
 for(db in all.db) {
   paths <- graphite::pathways("hsapiens", db)
-    pathways[[db]] <- paths
+  pathways[[db]] <- paths
 }
 save(pathways, file="graphite-pathways.rda")
+
+
+## convert identifiers to SYMBOL and CHEBI
+load(file="graphite-pathways.rda", verbose=TRUE)
+graphite::nodes(pathways[[1]][[1]], which='mixed')
+names(pathways)
+k="kegg"
+for(k in names(pathways)) {
+  pathways[[k]] <- lapply(pathways[[k]], convertIdentifiers, to="SYMBOL")
+  pathways[[k]] <- lapply(pathways[[k]], convertIdentifiers, to="CHEBI")
+}
+save(pathways, file="graphite-pathways-symbol-chebi.rda")
+
 
 ## get all nodes to create gene sets. Get all edges for creating PPI.
 load(file="graphite-pathways-symbol-chebi.rda",verbose=1)
@@ -27,6 +40,7 @@ names(pathways)
 pathways[[1]][[1]]
 all.nodes <- list()
 all.edges <- list()
+i="kegg"
 for(i in names(pathways)) {
   nn <- lapply(pathways[[i]], function(p) graphite::nodes(p, which="mixed"))
   ee <- lapply(pathways[[i]], function(p) {
@@ -35,6 +49,7 @@ for(i in names(pathways)) {
   })  
   title <- sapply(pathways[[i]], function(p) p@title)
   id <- sapply(pathways[[i]], function(p) p@id)
+  id <- sub("[:]","",id)
   db <- sapply(pathways[[i]], function(p) p@database)    
   tt <- paste0(title, " [",id,"]")
   head(tt)
@@ -59,24 +74,24 @@ pathways <- playbase::clean_gmt(gmt1, "METABOLITE")
 head(names(pathways))
 
 ##pwsize <- sapply(pathways, length)
-msize <- sapply(pathways, function(s) sum(grepl("CHEBI",s)))
-pathways <- pathways[order(-msize)]
-pwname <- gsub(" \\[.*","",names(pathways))
-table(duplicated(pwname))
-pathways <- pathways[!duplicated(pwname)]
-
 wsize <- sapply(pathways, length)
 msize <- sapply(pathways, function(s) sum(grepl("CHEBI",s)))
 psize <- sapply(pathways, function(s) sum(grepl("SYMBOL",s)))
 table( msize >= 3)
-pathways <- pathways[which(msize >=3)]
+table( psize >= 200)
+table( psize < 10)
+table( psize < 3)
+
+sel <- which(msize >= 3 & psize >= 3 )
+pathways <- pathways[sel]
 length(pathways)
 
 MSETxMETABOLITE <- playbase::createSparseGenesetMatrix(
     pathways,
     filter_genes = FALSE,
     min.geneset.size = 3,
-    max.geneset.size = 1000
+    max.geneset.size = 1000,
+    min_gene_frequency = 1
 )
 
 ## There are many duplicated pathways with different names. We take
@@ -87,7 +102,7 @@ ii <- order(-Matrix::rowSums(MSETxMETABOLITE!=0),-len.title)
 MSETxMETABOLITE <- MSETxMETABOLITE[ii,]
 
 dim(MSETxMETABOLITE)
-checksum <- sapply(apply(MSETxMETABOLITE!=0,1,which),sum)
+checksum <- apply(1*(MSETxMETABOLITE!=0),1,paste,collapse="")
 wdup <- which(duplicated(checksum))  
 sum(duplicated(checksum))
 sum(!duplicated(checksum))
@@ -138,8 +153,8 @@ usethis::use_data(GRAPHITE_PPI, overwrite = TRUE)
 ##------------------------------------------------------------------------
 ## Create PPI edgelist. collapse multiple, count edges
 ##------------------------------------------------------------------------
-
-igraphs <- list()
+load(file="graphite-pathways-symbol-chebi.rda",verbose=1)
+graphs <- list()
 i=j=1
 for(i in names(pathways)) {
   pw <- pathways[[i]]
