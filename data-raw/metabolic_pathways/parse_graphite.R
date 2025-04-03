@@ -72,6 +72,8 @@ load(file="graphite-edges.rda", verbose=1)
 gmt1 <- list(CUSTOM = all.nodes)
 pathways <- playbase::clean_gmt(gmt1, "METABOLITE")
 head(names(pathways))
+tail(names(pathways))
+length(pathways)
 
 ##pwsize <- sapply(pathways, length)
 wsize <- sapply(pathways, length)
@@ -80,9 +82,9 @@ psize <- sapply(pathways, function(s) sum(grepl("SYMBOL",s)))
 table( msize >= 3)
 table( psize >= 200)
 table( psize < 10)
-table( psize < 3)
+table( msize >= 3 & psize >= 10)
 
-sel <- which(msize >= 3 & psize >= 3 )
+sel <- which(msize >= 3 & psize >= 10 )
 pathways <- pathways[sel]
 length(pathways)
 
@@ -100,15 +102,14 @@ MSETxMETABOLITE <- playbase::createSparseGenesetMatrix(
 len.title <- nchar(rownames(MSETxMETABOLITE))
 ii <- order(-Matrix::rowSums(MSETxMETABOLITE!=0),-len.title)
 MSETxMETABOLITE <- MSETxMETABOLITE[ii,]
-
 dim(MSETxMETABOLITE)
+
 checksum <- apply(1*(MSETxMETABOLITE!=0),1,paste,collapse="")
-wdup <- which(duplicated(checksum))  
-sum(duplicated(checksum))
-sum(!duplicated(checksum))
+table(duplicated(checksum))
+names(checksum)[which(duplicated(checksum))]
 
 short.title <- gsub("(TG|PC|CL|PE)\\(.*| \\[.*","",names(checksum))
-sum(duplicated(short.title))
+table(duplicated(short.title))
   
 sel <- which(!duplicated(checksum) & !duplicated(short.title))
 length(sel)
@@ -124,19 +125,32 @@ tail(colnames(MSETxMETABOLITE))
 ## write data object
 usethis::use_data(MSETxMETABOLITE, overwrite = TRUE)
 
-head(colnames(playdata::MSETxMETABOLITE))
-tail(colnames(playdata::MSETxMETABOLITE))
-
 ##------------------------------------------------------------------------
 ## Create PPI edgelist. collapse multiple, count edges
 ##------------------------------------------------------------------------
 library(igraph)
 
-ee <- do.call(rbind, all.edges)
+head(names(all.edges),1000)
+tail(names(all.edges),1000)
+
+## remove redundant (filtered out) pathways 
+M <- MSETxMETABOLITE
+sel.pathways <- unique(gsub("METABOLITE:","",rownames(M)))
+sel.pathways <- sub("\\[hsa","[hsa:",sel.pathways)
+sel <- which(names(all.edges) %in% sel.pathways )
+length(sel)
+sel.edges <- all.edges[sel]
+length(sel.pathways)
+length(all.edges)
+length(sel.edges)
+
+ee <- do.call(rbind, sel.edges)
 sum(duplicated(ee))
 gr <- igraph::graph_from_edgelist(ee, directed=FALSE)
 E(gr)$weight <- count_multiple(gr)
 sum(E(gr)$weight[!which_multiple(gr)])
+
+hist(log10(1+E(gr)$weight), breaks=100)
 
 gr2 <- simplify(gr, edge.attr.comb = list(weight = "min"))
 ee <- igraph::as_edgelist(gr2) 
@@ -151,7 +165,47 @@ head(GRAPHITE_PPI)
 usethis::use_data(GRAPHITE_PPI, overwrite = TRUE)
 
 ##------------------------------------------------------------------------
-## Create PPI edgelist. collapse multiple, count edges
+## Extend metabolites adding first neighbours of proteins/metabolites
+## in a geneset
+##------------------------------------------------------------------------
+source("~/Playground/playbase/dev/include.R",chdir=TRUE)
+
+M <- MSETxMETABOLITE
+G <- playdata::GSETxGENE
+colnames(G) <- paste0("SYMBOL:",colnames(G))
+head(colnames(G))
+dim(G)
+
+ppi <- GRAPHITE_PPI
+extG  <- extend_metabolite_sets2(G, ppi, postfix="(ext2)", maxcost=0.1)
+extM1 <- extend_metabolite_sets(M, ppi, postfix="(ext1)", add=FALSE, maxcost=0.1)
+extM2 <- extend_metabolite_sets2(M, ppi, postfix="(ext2)", add=FALSE, maxcost=0.1)
+M0 <- M
+rownames(M0) <- paste(rownames(M0),"(ext0)")
+extM <- Matrix::t(merge_sparse_matrix(Matrix::t(extG), Matrix::t(M0)))
+extM <- Matrix::t(merge_sparse_matrix(Matrix::t(extM), Matrix::t(extM1)))
+extM <- Matrix::t(merge_sparse_matrix(Matrix::t(extM), Matrix::t(extM2)))
+dim(extM)
+head(colnames(extM),100)
+tail(colnames(extM))
+
+## filter on size: minimum 3 metabolites, minimum 10 proteins
+i1 <- grep("CHEBI:",colnames(extM))
+i2 <- grep("SYMBOL:",colnames(extM))
+num.mx <- Matrix::rowSums(extM[,i1]!=0)
+num.px <- Matrix::rowSums(extM[,i2]!=0)
+sel <- which(num.mx >= 3 & num.px >= 10)
+extM <- extM[sel,]
+dim(extM)
+
+## write data object
+XSETxMETABOLITE <- extM
+usethis::use_data(XSETxMETABOLITE, overwrite = TRUE)
+
+##load(file="../../data/XSETxMETABOLITE.rda",verbose=TRUE)
+
+##------------------------------------------------------------------------
+## Create igraphs
 ##------------------------------------------------------------------------
 load(file="graphite-pathways-symbol-chebi.rda",verbose=1)
 graphs <- list()
@@ -167,32 +221,8 @@ for(i in names(pathways)) {
 }
 save(graphs, file="graphite-igraphs.rda")
 
-##------------------------------------------------------------------------
-## Extend genesets
-##------------------------------------------------------------------------
-## library(igraph)
 
-## ## write data object
-## M <- playdata::MSETxMETABOLITE
-## dim(M)
-## ppi <- playdata::GRAPHITE_PPI
-## ppi[,1] <- ifelse( grepl("CHEBI",ppi[,1]), ppi[,1], paste0("SYMBOL:",ppi[,1]))
-## ppi[,2] <- ifelse( grepl("CHEBI",ppi[,2]), ppi[,2], paste0("SYMBOL:",ppi[,2]))
-## sel <- which( grepl("CHEBI",ppi[,1]) & grepl("CHEBI",ppi[,2]) & ppi[,3] <= 0.33 )
-## gr <- graph_from_edgelist( as.matrix(ppi[sel,1:2]) )
-## ppi_mat <- as.matrix(gr)
-## dim(ppi_mat)
-## table(colnames(M) %in% rownames(ppi_mat))
-## ## build neigborhood matrix for metabolites
-## ppi0 <- rbind("na"=0, cbind("na"=0, ppi_mat))
-## ii <- match(colnames(M),rownames(ppi0))
-## ii[is.na(ii)] <- 1
-## B <- ppi0[ii,ii]
-## colnames(B)=rownames(B)=colnames(M)
-## diag(B) <- 1
-## ## propagate neighbor
-## M1 <- M %*% B
-## write data object
-#MSETxMETABOLITE2 <- M1
-#usethis::use_data(MSETxMETABOLITE2, overwrite = TRUE)
+##------------------------------------------------------------------------
+##------------------------------------------------------------------------
+##------------------------------------------------------------------------
 
