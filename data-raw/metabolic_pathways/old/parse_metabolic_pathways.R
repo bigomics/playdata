@@ -36,6 +36,9 @@ library(AnnotationHub)
 ah <- AnnotationHub()
 query(ah, "wikipathways")
 query(ah, "Homo sapiens")
+qr <- query(ah, c("metabolites"))
+qr <- query(ah, c("metabolites", "Homo sapiens"))
+
 qr <- query(ah, c("wikipathways", "metabolites"))
 qr <- query(ah, c("wikipathways", "Homo sapiens", "metabolites"))
 qr <- query(ah, c("wikipathways", "Homo sapiens"))
@@ -46,6 +49,7 @@ qr
 names(qr)
 
 data <- qr[['AH91805']]
+dim(data)
 colnames(data)
 head(data,10)
 tail(data)
