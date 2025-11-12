@@ -39,3 +39,10 @@ jobs:
             git commit -m "Update version"
             git pull --ff-only
             git push origin
+
+      - name: Create and push tag
+        run: |
+            git config --local user.name "$GITHUB_ACTOR"
+            git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+            git tag $NEW_VERSION
+            git push origin $NEW_VERSION
