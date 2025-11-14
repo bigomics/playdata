@@ -2,6 +2,8 @@
 ## Multi-omics pathways edges/links from Graphite
 ##------------------------------------------------------------------------
 
+## Input: download indirectly using graphite package
+##
 ## Creates:
 ##   MSETxMETABOLITE  - combined metaboliteset x metabolite sparsemat
 ##   GRAPHITE_PPI     - mixed PPI/MMI
