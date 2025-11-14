@@ -1,10 +1,15 @@
-#------------------------------------------------------------------------
-# Multi-omics pathways edges/links from Graphite
-#------------------------------------------------------------------------
+##------------------------------------------------------------------------
+## Multi-omics pathways edges/links from Graphite
+##------------------------------------------------------------------------
+
+## Creates:
+##   MSETxMETABOLITE  - combined metaboliteset x metabolite sparsemat
+##   GRAPHITE_PPI     - mixed PPI/MMI
 
 ##BiocManager::install(c("graphite","igraph"))
 library(graphite)
 library(igraph)
+options(Ncpus=64)
 
 ## Collect all edges from all databases: kegg, panther, pathbank,
 ## pharmgkb, reactome, smpdb, wikipathways
@@ -21,75 +26,117 @@ for(db in all.db) {
 }
 save(pathways, file="graphite-pathways.rda")
 
-
-## convert identifiers to SYMBOL and CHEBI
-load(file="graphite-pathways.rda", verbose=TRUE)
-graphite::nodes(pathways[[1]][[1]], which='mixed')
-names(pathways)
-k="kegg"
-for(k in names(pathways)) {
-  pathways[[k]] <- lapply(pathways[[k]], convertIdentifiers, to="SYMBOL")
-  pathways[[k]] <- lapply(pathways[[k]], convertIdentifiers, to="CHEBI")
-}
-save(pathways, file="graphite-pathways-symbol-chebi.rda")
-
-
 ## get all nodes to create gene sets. Get all edges for creating PPI.
-load(file="graphite-pathways-symbol-chebi.rda",verbose=1)
+load(file="graphite-pathways.rda",verbose=1)
 names(pathways)
-pathways[[1]][[1]]
+sapply(pathways, length)
+pathways <- pathways[order(sapply(pathways, length))]
+sapply(pathways, length)
+
 all.nodes <- list()
 all.edges <- list()
-i="kegg"
-for(i in names(pathways)) {
-  nn <- lapply(pathways[[i]], function(p) graphite::nodes(p, which="mixed"))
-  ee <- lapply(pathways[[i]], function(p) {
-    e1 <- graphite::edges(p,which="mixed")
-    cbind( paste0(e1$src_type,":",e1$src), paste0(e1$dest_type,":",e1$dest) )
+db="kegg"
+db="pathpank"
+db="wikipathways"
+for(db in names(pathways)) {
+
+  cat(">>> converting DB:", db, "<<<\n")
+  pw <- pathways[[db]]
+  #pw <- head(pw,10)
+  #pw <- pw[c(1:5,436:438)]
+  
+  ##----------------------------------------------  
+  ## Get all nodes as SYMBOL, CHEBI or LIPIDMAPS
+  ##----------------------------------------------
+  p0 <- graphite::convertIdentifiers(pw, to="SYMBOL")
+  p1 <- graphite::convertIdentifiers(p0, to="CHEBI")
+  p2 <- graphite::convertIdentifiers(p0, to="LIPIDMAPS")
+  n0 <- lapply(p0, function(p) graphite::nodes(p))
+  n1 <- lapply(p1, function(p) graphite::nodes(p, which='mixed'))
+  n2 <- lapply(p2, function(p) graphite::nodes(p, which='mixed'))
+  nodes <- mapply(union, n0, n1)
+  nodes <- mapply(union, nodes, n2)
+
+  ##----------------------------------------------
+  ## get edges: proteins, metabolites, lipids
+  ##----------------------------------------------  
+  e0 <- lapply(p0, function(p) {
+    e <- graphite::edges(p)
+    cbind( paste0(e$src_type,":",e$src), paste0(e$dest_type,":",e$dest) )
   })  
-  title <- sapply(pathways[[i]], function(p) p@title)
-  id <- sapply(pathways[[i]], function(p) p@id)
+  e1 <- lapply(p1, function(p) {
+    e <- graphite::edges(p, which="mixed")
+    cbind( paste0(e$src_type,":",e$src), paste0(e$dest_type,":",e$dest) )
+  })  
+  e2 <- lapply(p2, function(p) {
+    e <- graphite::edges(p, which="mixed")
+    cbind( paste0(e$src_type,":",e$src), paste0(e$dest_type,":",e$dest) )
+  })  
+  edges <- mapply(rbind, e0, e1)
+  edges <- mapply(rbind, edges, e2)
+  edges <- lapply( edges, function(e) e[!duplicated(e),,drop=FALSE] )
+
+  ##----------------------------------------------
+  ## extract title
+  ##----------------------------------------------
+  title <- sapply(pw, function(p) p@title)
+  id <- sapply(pw, function(p) p@id)
   id <- sub("[:]","",id)
-  db <- sapply(pathways[[i]], function(p) p@database)    
+  db <- sapply(pw, function(p) p@database)    
   tt <- paste0(title, " [",id,"]")
   head(tt)
-  names(nn) <- tt
-  names(ee) <- tt
-  all.nodes <- c(all.nodes, nn)
-  all.edges <- c(all.edges, ee)
-}
-save(all.nodes, file="graphite-nodes.rda")
-save(all.edges, file="graphite-edges.rda")
+  names(nodes) <- tt
+  names(edges) <- tt
 
-load(file="graphite-nodes.rda", verbose=1)
-load(file="graphite-edges.rda", verbose=1)
+  all.nodes <- c(all.nodes, nodes)
+  all.edges <- c(all.edges, edges)
+
+  save(all.nodes, file="graphite-nodes.rda")
+  save(all.edges, file="graphite-edges.rda")
+}
+
+length(all.nodes)
+head(names(all.nodes),20)
 
 #------------------------------------------------------------------------
 # Create pathways gene sets
 #------------------------------------------------------------------------
+load(file="graphite-nodes.rda", verbose=1)
+load(file="graphite-edges.rda", verbose=1)
+length(all.nodes)
+tail(names(all.nodes))
+tail(all.nodes)
+
+ngene  <- sapply(all.nodes, function(n) sum(grepl("SYMBOL",n)))
+nlipid <- sapply(all.nodes, function(n) sum(grepl("LIPID",n)))
+nchebi <- sapply(all.nodes, function(n) sum(grepl("CHEBI",n)))
+
+table(nchebi>=3)
+table(nlipid>=3)
+table(ngene>=10)
+table(ngene>=3)
+table(ngene>=3 & nchebi>=3)
+table(has.lipid, has.chebi)
 
 ## cleanup names
-gmt1 <- list(CUSTOM = all.nodes)
-pathways <- playbase::clean_gmt(gmt1, "METABOLITE")
-head(names(pathways))
-tail(names(pathways))
-length(pathways)
+gmt <- list(CUSTOM = all.nodes)
+gmt <- playbase::clean_gmt(gmt, "METABOLITE")
+head(names(gmt))
+tail(names(gmt))
+length(gmt)
 
-##pwsize <- sapply(pathways, length)
-wsize <- sapply(pathways, length)
-msize <- sapply(pathways, function(s) sum(grepl("CHEBI",s)))
-psize <- sapply(pathways, function(s) sum(grepl("SYMBOL",s)))
-table( msize >= 3)
-table( psize >= 200)
-table( psize < 10)
-table( msize >= 3 & psize >= 10)
-
-sel <- which(msize >= 3 & psize >= 10 )
-pathways <- pathways[sel]
-length(pathways)
+##pwsize <- sapply(gmt, length)
+wsize <- sapply(gmt, length)
+msize <- sapply(gmt, function(s) sum(grepl("CHEBI",s)))
+lsize <- sapply(gmt, function(s) sum(grepl("LIPID",s)))
+psize <- sapply(gmt, function(s) sum(grepl("SYMBOL",s)))
+sel <- ((msize >= 3 | lsize >= 3) & psize >= 3)
+table(sel)
+gmt <- gmt[sel]
+length(gmt)
 
 MSETxMETABOLITE <- playbase::createSparseGenesetMatrix(
-    pathways,
+    gmt,
     filter_genes = FALSE,
     min.geneset.size = 3,
     max.geneset.size = 1000,
@@ -104,23 +151,24 @@ ii <- order(-Matrix::rowSums(MSETxMETABOLITE!=0),-len.title)
 MSETxMETABOLITE <- MSETxMETABOLITE[ii,]
 dim(MSETxMETABOLITE)
 
+## we use a checksum to see if rows are duplicated
 checksum <- apply(1*(MSETxMETABOLITE!=0),1,paste,collapse="")
 table(duplicated(checksum))
-names(checksum)[which(duplicated(checksum))]
 
-short.title <- gsub("(TG|PC|CL|PE)\\(.*| \\[.*","",names(checksum))
+## Check if short titles are duplicated (??). 
+short.title <- gsub("(TG|PC|CL|PE)\\(.*","",names(checksum))
 table(duplicated(short.title))
-  
-sel <- which(!duplicated(checksum) & !duplicated(short.title))
-length(sel)
-names(checksum)[sel]
-MSETxMETABOLITE <- MSETxMETABOLITE[sel,]
 
+## The SMPDB database has many duplicated pathways with different
+## names. This is very annoying.
+is.smp <- grepl("SMP",names(checksum))
+table(is.smp & duplicated(checksum) & duplicated(short.title))
+sel <- (!(is.smp & duplicated(checksum) & duplicated(short.title)))
+table(sel)
+
+MSETxMETABOLITE <- MSETxMETABOLITE[sel,]
 dim(MSETxMETABOLITE)
 dim(playdata::MSETxMETABOLITE)
-head(rownames(MSETxMETABOLITE))
-head(colnames(MSETxMETABOLITE))
-tail(colnames(MSETxMETABOLITE))
 
 ## write data object
 usethis::use_data(MSETxMETABOLITE, overwrite = TRUE)
@@ -130,14 +178,16 @@ usethis::use_data(MSETxMETABOLITE, overwrite = TRUE)
 ##------------------------------------------------------------------------
 library(igraph)
 
-head(names(all.edges),1000)
-tail(names(all.edges),1000)
+head(names(all.edges),100)
+tail(names(all.edges),100)
 
 ## remove redundant (filtered out) pathways 
 M <- MSETxMETABOLITE
+dim(M)
 sel.pathways <- unique(gsub("METABOLITE:","",rownames(M)))
-sel.pathways <- sub("\\[hsa","[hsa:",sel.pathways)
-sel <- which(names(all.edges) %in% sel.pathways )
+sel.pathways <- gsub("[:]","",sel.pathways)
+names.all.edges <- gsub("[:]","",names(all.edges))
+sel <- which(names.all.edges %in% sel.pathways )
 length(sel)
 sel.edges <- all.edges[sel]
 length(sel.pathways)
@@ -149,74 +199,37 @@ sum(duplicated(ee))
 gr <- igraph::graph_from_edgelist(ee, directed=FALSE)
 E(gr)$weight <- count_multiple(gr)
 sum(E(gr)$weight[!which_multiple(gr)])
-
 hist(log10(1+E(gr)$weight), breaks=100)
-
 gr2 <- simplify(gr, edge.attr.comb = list(weight = "min"))
 ee <- igraph::as_edgelist(gr2) 
 ee <- apply(ee, 2, function(a) sub("SYMBOL:","",a))
 ee <- as.data.frame(ee) 
 ee$cost <- 1 / E(gr2)$weight
+
 GRAPHITE_PPI <- data.frame(from = ee[,1], to = ee[,2], cost = ee$cost)
+dim(GRAPHITE_PPI)
 head(GRAPHITE_PPI)
-
-## save(GRAPHITE_PPI, file="GRAPHITE_PPI.rda")
-## load("~/Playground/public-db/pathbank.org/GRAPHITE_PPI.rda",verbose=TRUE)
 usethis::use_data(GRAPHITE_PPI, overwrite = TRUE)
-
-##------------------------------------------------------------------------
-## Extend metabolites adding first neighbours of proteins/metabolites
-## in a geneset
-##------------------------------------------------------------------------
-source("~/Playground/playbase/dev/include.R",chdir=TRUE)
-
-M <- MSETxMETABOLITE
-G <- playdata::GSETxGENE
-colnames(G) <- paste0("SYMBOL:",colnames(G))
-head(colnames(G))
-dim(G)
-
-ppi <- GRAPHITE_PPI
-extG  <- extend_metabolite_sets2(G, ppi, postfix="(ext2)", maxcost=0.1)
-extM1 <- extend_metabolite_sets(M, ppi, postfix="(ext1)", add=FALSE, maxcost=0.1)
-extM2 <- extend_metabolite_sets2(M, ppi, postfix="(ext2)", add=FALSE, maxcost=0.1)
-M0 <- M
-rownames(M0) <- paste(rownames(M0),"(ext0)")
-extM <- Matrix::t(merge_sparse_matrix(Matrix::t(extG), Matrix::t(M0)))
-extM <- Matrix::t(merge_sparse_matrix(Matrix::t(extM), Matrix::t(extM1)))
-extM <- Matrix::t(merge_sparse_matrix(Matrix::t(extM), Matrix::t(extM2)))
-dim(extM)
-head(colnames(extM),100)
-tail(colnames(extM))
-
-## filter on size: minimum 3 metabolites, minimum 10 proteins
-i1 <- grep("CHEBI:",colnames(extM))
-i2 <- grep("SYMBOL:",colnames(extM))
-num.mx <- Matrix::rowSums(extM[,i1]!=0)
-num.px <- Matrix::rowSums(extM[,i2]!=0)
-sel <- which(num.mx >= 3 & num.px >= 10)
-extM <- extM[sel,]
-dim(extM)
-
-## write data object
-XSETxMETABOLITE <- extM
-usethis::use_data(XSETxMETABOLITE, overwrite = TRUE)
-
-##load(file="../../data/XSETxMETABOLITE.rda",verbose=TRUE)
 
 ##------------------------------------------------------------------------
 ## Create igraphs
 ##------------------------------------------------------------------------
-load(file="graphite-pathways-symbol-chebi.rda",verbose=1)
+load(file="graphite-pathways.rda",verbose=1)
 graphs <- list()
 i=j=1
 for(i in names(pathways)) {
   pw <- pathways[[i]]
+  p0 <- graphite::convertIdentifiers(pw, to="SYMBOL")
+  p1 <- graphite::convertIdentifiers(p0, to="CHEBI")
+  p2 <- graphite::convertIdentifiers(p0, to="LIPIDMAPS")
   for(j in 1:length(pw)) {
-    gr <- pathwayGraph(pw[[j]], which="mixed")
     e <- pw@entries[[j]]
     tt <- paste0(e@database,":",e@title, " [", e@id, "]")
-    graphs[[tt]] <- igraph::graph_from_graphnel(gr)
+    g1 <- pathwayGraph(p1[[j]], which="mixed")
+    g2 <- pathwayGraph(p2[[j]], which="mixed")
+    ig1 <- igraph::graph_from_graphnel(g1)
+    ig2 <- igraph::graph_from_graphnel(g2)
+    graphs[[tt]] <- igraph::union(ig1,ig2)
   }
 }
 save(graphs, file="graphite-igraphs.rda")
