@@ -8,11 +8,10 @@ library(dplyr)
 # database has ChEBI ID, name and definition of the metabolite. We
 # restrict our annotation to only those molecules referred in ChEBI.
 
-#system("cd ~/Downloads && wget https://ftp.ebi.ac.uk/pub/databases/chebi/flat_files/compounds.tsv.gz")
-chebi <- readr::read_tsv("./data-raw/metabolic_pathways/chebi_compounds_20240801_0501.tsv")
 if(!file.exists("~/Downloads/compounds.tsv.gz")) {
-  chebi <- readr::read_tsv("~/Downloads/compounds.tsv.gz")
+  system("cd ~/Downloads && rm -f compounds.tsv.gz && wget https://ftp.ebi.ac.uk/pub/databases/chebi/flat_files/compounds.tsv.gz")  
 }
+chebi <- readr::read_tsv("~/Downloads/compounds.tsv.gz")
 head(data.frame(chebi))
 colnames(chebi)
 #chebi <- chebi[c("ID", "CHEBI_ACCESSION", "NAME", "DEFINITION")]
@@ -46,7 +45,7 @@ match2 <- function(a,b)  ifelse(is.na(a), NA, match(a,b))
 
 # add pathbank ID. We need this for the Pathbank SVG pathway images.
 if(!file.exists("~/Downloads/pathbank_all_metabolites.csv.zip")) {
-  system("cd ~/Downloads && wget https://pathbank.org/downloads/pathbank_all_metabolites.csv.zip")
+  system("cd ~/Downloads && rm -f pathbank_all_metabolites.csv.zip && wget https://pathbank.org/downloads/pathbank_all_metabolites.csv.zip")
 }
 mx <- data.table::fread("~/Downloads/pathbank_all_metabolites.csv.zip")
 sum(setdiff(map$HMDB,c(NA,"","-"))  %in% mx[["HMDB ID"]])
