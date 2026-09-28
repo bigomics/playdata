@@ -29,7 +29,9 @@
 ##          converts what we have rather than rebuilding from source. Before
 ##          the next refresh, resolve each label to its published supplement
 ##          and rewrite this as a real download.
-## RE-RUN   only after that gap is closed.
+## RE-RUN   only after that gap is closed, and then re-run
+##          build-epicv2-reference.R, which appends the fourth list
+##          (peters2024_epicv2, EPIC v2) to the file this one writes.
 
 csv <- "../omicsplayground-methylome-app/components/app_methylome/inst/masking/cross_reactive_probes.csv"
 stopifnot(file.exists(csv))
