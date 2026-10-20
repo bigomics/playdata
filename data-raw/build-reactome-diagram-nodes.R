@@ -1,5 +1,10 @@
-## Build inst/extdata/reactome_diagram_nodes.tsv.gz: where each molecule sits on
-## every bundled Reactome diagram, and the ids it can be matched by.
+## Build two pathway-overlay tables in inst/extdata:
+##   - reactome_diagram_nodes.tsv.gz : where each molecule sits on every bundled
+##                                      Reactome diagram, and the ids it matches
+##   - chebi_charge_classes.tsv.gz    : ChEBI id -> charge class, so a dataset's
+##                                      neutral compound matches a diagram's
+##                                      charged form (L-ornithine vs
+##                                      L-ornithinium(1+)) on any diagram
 ##
 ## Why: the bundled SVGs (build-reactome-diagrams.R) draw their labels as
 ## outlines, so a renderer cannot find a node by its text. Reactome publishes the
@@ -8,9 +13,7 @@
 ##
 ## One row per Chemical or Protein node: diagram, x, y, width, height, keys.
 ## `keys` is `;`-joined -- gene symbols and the UniProt accession for a protein,
-## `ChEBI_<id>` for a chemical. Reactome draws chemicals in their charged form
-## (L-argininium(1+)) while datasets record the neutral compound, so each ChEBI id
-## is expanded to every conjugate acid/base and tautomer of it.
+## `ChEBI_<id>` for a chemical.
 ## ponytail: Complex/EntitySet/Gene nodes are skipped -- one colour for several
 ## molecules says nothing; add them if a member-summary rule is ever agreed.
 ##
@@ -31,10 +34,11 @@ utils::download.file(
 rel <- utils::read.delim(rel_file, colClasses = "character")
 rel <- rel[rel$relation_type_id %in% c("6", "7", "11"), c("init_id", "final_id")]
 comp <- igraph::components(igraph::graph_from_data_frame(rel, directed = FALSE))$membership
-members <- split(names(comp), comp)
-chebi_class <- function(id) {
-  if (id %in% names(comp)) members[[as.character(comp[[id]])]] else id
-}
+classes <- data.frame(chebi = names(comp), class = unname(comp))
+con <- gzfile(file.path(extdata, "chebi_charge_classes.tsv.gz"), "w")
+utils::write.table(classes[order(classes$class), ], con, sep = "\t",
+                   quote = FALSE, row.names = FALSE)
+close(con)
 
 fetch_json <- function(url) {
   for (attempt in 1:3) {
@@ -63,7 +67,7 @@ for (i in seq_along(D)) {
     e <- entities[[as.character(n$reactomeId)]]
     if (is.null(e) || is.null(e$identifier)) next
     keys <- if (identical(n$renderableClass, "Chemical")) {
-      paste0("ChEBI_", chebi_class(e$identifier))
+      paste0("ChEBI_", e$identifier)
     } else {
       c(unlist(e$geneNames), e$identifier)
     }
