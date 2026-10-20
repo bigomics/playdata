@@ -11,7 +11,8 @@
 ## those and precompute the sub-pathway -> diagram resolution offline, so the app
 ## never calls reactome.org at runtime.
 ##
-## Re-run when Reactome ships a new release (~quarterly).
+## Re-run when Reactome ships a new release (~quarterly), then
+## build-reactome-diagram-nodes.R for the matching node layout.
 
 base <- "https://reactome.org/download/current"
 extdata <- file.path("inst", "extdata")
